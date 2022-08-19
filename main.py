@@ -56,19 +56,19 @@ def pageChangeButtons(url):
     params = {
         'q': oldParams["q"][0],
     }
-    outputHTML = ""
+    outputHTML = '<div class="footer">'
     if (oldParams.get('start')):
         oldStart = int(oldParams["start"][0])
     else:
         oldStart = 0
     # allow the user to change to a surround page + a few seeker pages
-    offset = max(oldStart - 100, 0)
-    for i in range(0, 20):
+    offset = max(oldStart - 50, 0)
+    for i in range(0, 10):
         params['start'] = offset  # type: ignore
         outputHTML += render_template("pageChangeButtons.html", path='search?' +
                                       parse.urlencode(params), pageNumber=int(offset / 10))
         offset += 10
-    return outputHTML
+    return outputHTML + "</div>"
 
 
 @app.route('/search')

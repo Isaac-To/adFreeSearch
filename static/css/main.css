@@ -1,0 +1,48 @@
+* {
+    font-family: "Andale Mono", monospace;
+}
+
+body {
+    margin-top: 2%;
+    margin-left: 20%;
+    margin-right: 20%;
+    margin-bottom: 10%;
+}
+
+.input-text {
+    text-align: center;
+    margin: 2%;
+    padding: 0.5%;
+    border: none;
+    background-color: white;
+    box-shadow: 0px 0px 2px lightgrey;
+    border-radius: 12px;
+    width: 75%;
+    margin-left: 50%;
+    transform: translateX(-50%);
+}
+
+.footer {
+    margin-top: 5%;
+}
+
+.pg-btn {
+    padding: 1%;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0px 0px 2px lightgrey;
+    margin-left: 1%;
+    animation: 0.5s;
+}
+
+.pg-btn:hover {
+    background-color: rgb(245, 240, 255);
+}
+
+.result-box {
+    margin: 2%;
+}
+
+.title {
+    margin: 0;
+}

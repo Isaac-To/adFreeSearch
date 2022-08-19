@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <title>ungoogled-search</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    </head>
     <form method="POST">
-        <input type="text" name="query">
+        <input type="text" name="query" class="input-text" placeholder="Make an ungoogled-search">
     </form>
 </html>
