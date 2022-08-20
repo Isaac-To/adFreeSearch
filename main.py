@@ -7,7 +7,7 @@ from fake_useragent import UserAgent
 import uuid
 
 app = Flask(__name__)
-
+app.secret_key = uuid.uuid1().hex
 
 def urlParse(url):
     return parse.parse_qs(parse.urlparse(url).query)
@@ -103,5 +103,4 @@ def query_post():
 
 
 if __name__ == '__main__':
-    app.config['SECRET_KEY'] = uuid.uuid1().hex
     app.run(debug=True)
