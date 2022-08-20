@@ -12,36 +12,39 @@ app.secret_key = uuid.uuid1().hex
 def urlParse(url):
     return parse.parse_qs(parse.urlparse(url).query)
 
+def randomAgent():
+    ua = UserAgent()
+    header = {'User-Agent': str(ua.random)}
+    print(header)
+    return header
 
 def googleResults(params):
     link = 'https://google.com/search?' + parse.urlencode(params)
     print(f'forwarded to {link}')
-    # a random UA
-    ua = UserAgent()
-    req = requests.get(link, ua.random)
-    # notify if blocked by Re-Captcha
-    if req.status_code == 200:
-        soup = BeautifulSoup(req.text, "html.parser")
-        ress = soup.find_all("div", class_="fP1Qef")
-        resultsDict = []
-        for r in ress:
-            try:
-                resultsDict.append({
-                    'title': r.find("h3").text,
-                    'link': r.find("a", href=True)['href'][len('/url?q='):].split("&")[0],
-                    'directory': r.find("div", class_="UPmit").text,
-                    'summary': r.find("div", class_="BNeawe s3v9rd AP7Wnd").text,
-                })
-            except:
-                pass
-        outputHTML = "<div class='content'>"
-        for r in resultsDict:
-            buildHTML = render_template(
-                "singleResult.html", title=r['title'], link=r['link'], directory=r["directory"], summary=r["summary"])
-            outputHTML += buildHTML
-        return outputHTML + "</div>"
-    else:
-        return "Err: 200 Ran into Re-Captcha, try hosting from another IP-addr or waiting a while"
+    req = requests.get(link, headers = randomAgent())
+    soup = BeautifulSoup(req.text, "html.parser")
+    # return soup.prettify()
+    ress = soup.find_all("div", class_="fP1Qef")
+    resultsDict = []
+    for r in ress:
+        try:
+            trackerLink = r.find("a", href=True)['href'][r.find("a", href=True)['href'].find('http'):]
+            strippedLink = trackerLink[:trackerLink.find('&')]
+            result = {
+                'title': r.find("h3").text,
+                'link': strippedLink,
+                'directory': r.find("div", class_="UPmit").text,
+                'summary': r.find("div", class_="BNeawe s3v9rd AP7Wnd").text,
+            }
+            resultsDict.append(result)
+        except:
+            pass
+    outputHTML = "<div class='content'>"
+    for r in resultsDict:
+        buildHTML = render_template(
+            "singleResult.html", title=r['title'], link=r['link'], directory=r["directory"], summary=r["summary"])
+        outputHTML += buildHTML
+    return outputHTML + "</div>"
 
 @app.route('/')
 def index():
@@ -51,11 +54,14 @@ def index():
 def search():
     urlparams = urlParse(request.url)
     try:
-        session['q'] = urlparams.get('q')
+        session['q'] = urlparams.get('q')[0]
     except:
         session['q'] = 'Privacy tips'
     try:
-        session['start'] = urlparams.get('start')
+        if urlparams.get('start') == None:
+            session["start"] = 0
+        else:
+            session['start'] = urlparams.get('start')[0]
     except:
         session['start'] = 0
     return query_post()
@@ -74,8 +80,7 @@ def query_post():
             session['start'] = int(request.form.get('pg-btn')) # type: ignore
         elif request.form.get('proxy-btn') != None:
             # proxy button backend
-            ua = UserAgent()
-            req = requests.get(request.form.get('proxy-btn'), ua.random)  # type: ignore
+            req = requests.get(request.form.get('proxy-btn'), headers = randomAgent())  # type: ignore
             soup = BeautifulSoup(req.text, "html.parser")
             # strips external JS. Only allows transparent on page js.
             scripts = soup.find_all('script', src=True)
