@@ -92,7 +92,7 @@ def query_post():
                 # converts to full links
                 if (link.get("href")).startswith("/"):
                     link['href'] = "https://" + str((parse.urlparse(request.form.get('proxy-btn'))).netloc) + link["href"],
-            return render_template('index.html') + soup.prettify()
+            return soup.prettify()
     params = {
         'q': session["q"],
         'start': session["start"],
