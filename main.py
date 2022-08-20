@@ -1,15 +1,11 @@
 from distutils.command.build import build
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, session
 from bs4 import BeautifulSoup
 from urllib import parse
 import requests
+from fake_useragent import UserAgent
 
 app = Flask(__name__)
-
-
-@app.route('/')
-def index():
-    return render_template("index.html")
 
 
 def urlParse(url):
@@ -23,65 +19,69 @@ def googleResults(params):
         googlifiedParams = {'q': params['q'][0]}
     link = 'https://google.com/search?' + parse.urlencode(googlifiedParams)
     print(f'forwarded to {link}')
-    req = requests.get(link).text
-    soup = BeautifulSoup(req, "html.parser")
-    ress = soup.find_all("div", class_="fP1Qef")
-    resultsDict = []
-    for r in ress:
-        try:
-            resultsDict.append({
-                'title': r.find("h3").text,
-                'link': r.find("a", href=True)['href'][len('/url?q='):].split("&")[0],
-                'directory': r.find("div", class_="UPmit").text,
-                'summary': r.find("div", class_="BNeawe s3v9rd AP7Wnd").text,
-            })
-        except:
-            pass
-    return resultsDict
-
-
-def resultsHTML(url):
-    params = urlParse(url)
-    resultsDict = googleResults(params)
-    outputHTML = ""
-    for r in resultsDict:
-        buildHTML = render_template(
-            "singleResult.html", title=r['title'], link=r['link'], directory=r["directory"], summary=r["summary"])
-        outputHTML += buildHTML
-    return outputHTML
-
-
-def pageChangeButtons(url):
-    oldParams = urlParse(url)
-    params = {
-        'q': oldParams["q"][0],
-    }
-    outputHTML = '<div class="footer">'
-    if (oldParams.get('start')):
-        oldStart = int(oldParams["start"][0])
+    # a random UA
+    ua = UserAgent()
+    req = requests.get(link, ua.random)
+    # notify if blocked by Re-Captcha
+    if req.status_code == 200:
+        soup = BeautifulSoup(req.text, "html.parser")
+        ress = soup.find_all("div", class_="fP1Qef")
+        resultsDict = []
+        for r in ress:
+            try:
+                resultsDict.append({
+                    'title': r.find("h3").text,
+                    'link': r.find("a", href=True)['href'][len('/url?q='):].split("&")[0],
+                    'directory': r.find("div", class_="UPmit").text,
+                    'summary': r.find("div", class_="BNeawe s3v9rd AP7Wnd").text,
+                })
+            except:
+                pass
+        outputHTML = ""
+        for r in resultsDict:
+            buildHTML = render_template(
+                "singleResult.html", title=r['title'], link=r['link'], directory=r["directory"], summary=r["summary"])
+            outputHTML += buildHTML
+        return outputHTML
     else:
-        oldStart = 0
-    # allow the user to change to a surround page + a few seeker pages
-    offset = max(oldStart - 50, 0)
-    for i in range(0, 10):
-        params['start'] = offset  # type: ignore
-        outputHTML += render_template("pageChangeButtons.html", path='search?' +
-                                      parse.urlencode(params), pageNumber=int(offset / 10))
-        offset += 10
-    return outputHTML + "</div>"
+        return "Err: 200 Ran into Re-Captcha, try hosting from another IP-addr or waiting a while"
 
-
-@app.route('/search')
-def query():
-    return render_template('index.html') + resultsHTML(request.url) + pageChangeButtons(request.url)  # type: ignore
-
-
+@app.route('/')
 @app.route('/', methods=['POST'])
+@app.route('/search')
 @app.route('/search', methods=['POST'])
 def query_post():
-    query = request.form.get('query')  # type: ignore
-    return redirect(f'/search?q={query}')
+    # handles new queries from the URL
+    if session.new:
+        session.permanent = True
+        urlparams = urlParse(request.url)
+        session['q'] = urlparams.get('q')
+        session['start'] = urlparams.get('start')
+    # if there is a new query from the search bar or an update from the page buttons
+    if request.method == "POST":
+        if request.form.get('query') != None:
+            session.new = True
+            session['q'] = request.form.get('query')  # type: ignore
+            session['start'] = 0
+        elif request.form.get('pg-btn'):
+            try:
+                session['start'] = int(request.form.get('pg-btn'))
+            except:
+                session['start'] = 0
+    params = {
+        'q': [session["q"]],
+        'start': [session["start"]],
+    }
+    # change page buttons
+    pgButtons = "<div class='footer'>"
+    totalNumberOfButtons = 10
+    offset = max(0, int(session['start'] / 10) - int(totalNumberOfButtons / 2))
+    for i in range(offset, offset + totalNumberOfButtons):
+        pgButtons += render_template('pageChangeButtons.html', startResult= i * 10, pageNum=i)
+    pgButtons += "</div>"
+    return render_template('index.html') + googleResults(params) + pgButtons
 
 
 if __name__ == '__main__':
+    app.secret_key = "TEMP VALUE CHANGE LATER"
     app.run(debug=True)
