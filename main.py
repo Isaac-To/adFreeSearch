@@ -13,11 +13,7 @@ def urlParse(url):
 
 
 def googleResults(params):
-    if params.get('start') == "0":
-        googlifiedParams = {'q': params['q'][0], 'start': params["start"][0]}
-    else:
-        googlifiedParams = {'q': params['q'][0]}
-    link = 'https://google.com/search?' + parse.urlencode(googlifiedParams)
+    link = 'https://google.com/search?' + parse.urlencode(params)
     print(f'forwarded to {link}')
     # a random UA
     ua = UserAgent()
@@ -52,8 +48,8 @@ def googleResults(params):
 @app.route('/search', methods=['POST'])
 def query_post():
     # handles new queries from the URL
+    session.permanent = True
     if session.new:
-        session.permanent = True
         urlparams = urlParse(request.url)
         session['q'] = urlparams.get('q')
         session['start'] = urlparams.get('start')
@@ -63,14 +59,28 @@ def query_post():
             session.new = True
             session['q'] = request.form.get('query')  # type: ignore
             session['start'] = 0
-        elif request.form.get('pg-btn'):
-            try:
-                session['start'] = int(request.form.get('pg-btn'))
-            except:
-                session['start'] = 0
+        elif request.form.get('pg-btn') != None:
+            # page change button backend
+            session['start'] = int(request.form.get('pg-btn')) # type: ignore
+        elif request.form.get('proxy-btn') != None:
+            # proxy button backend
+            ua = UserAgent()
+            req = requests.get(request.form.get('proxy-btn'), ua.random)  # type: ignore
+            soup = BeautifulSoup(req.text, "html.parser")
+            # strips external JS. Only allows transparent on page js.
+            scripts = soup.find_all('script', src=True)
+            for script in scripts: 
+                script.decompose()
+            links = soup.find_all("a", href=True)
+            # applies proxy on links as well
+            for link in links:
+                # converts to full links
+                if (link.get("href")).startswith("/"):
+                    link['href'] = "https://" + str((parse.urlparse(request.form.get('proxy-btn'))).netloc) + link["href"],
+            return render_template('index.html') + soup.prettify()
     params = {
-        'q': [session["q"]],
-        'start': [session["start"]],
+        'q': session["q"],
+        'start': session["start"],
     }
     # change page buttons
     pgButtons = "<div class='footer'>"
