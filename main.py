@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from urllib import parse
 import requests
 from fake_useragent import UserAgent
+import uuid
 
 app = Flask(__name__)
 
@@ -43,20 +44,29 @@ def googleResults(params):
         return "Err: 200 Ran into Re-Captcha, try hosting from another IP-addr or waiting a while"
 
 @app.route('/')
-@app.route('/', methods=['POST'])
+def index():
+    return render_template("index.html")
+
 @app.route('/search')
+def search():
+    urlparams = urlParse(request.url)
+    try:
+        session['q'] = urlparams.get('q')
+    except:
+        session['q'] = 'Privacy tips'
+    try:
+        session['start'] = urlparams.get('start')
+    except:
+        session['start'] = 0
+    return query_post()
+
+@app.route('/', methods=['POST'])
 @app.route('/search', methods=['POST'])
 def query_post():
-    # handles new queries from the URL
     session.permanent = True
-    if session.new:
-        urlparams = urlParse(request.url)
-        session['q'] = urlparams.get('q')
-        session['start'] = urlparams.get('start')
     # if there is a new query from the search bar or an update from the page buttons
     if request.method == "POST":
         if request.form.get('query') != None:
-            session.new = True
             session['q'] = request.form.get('query')  # type: ignore
             session['start'] = 0
         elif request.form.get('pg-btn') != None:
@@ -85,7 +95,7 @@ def query_post():
     # change page buttons
     pgButtons = "<div class='footer'><div class='pg-btn-container'>"
     totalNumberOfButtons = 10
-    offset = max(0, int(session['start'] / 10) - int(totalNumberOfButtons / 2))
+    offset = max(0, int((session['start'] if session['start'] != None else 0) / 10) - int(totalNumberOfButtons / 2))
     for i in range(offset, offset + totalNumberOfButtons):
         pgButtons += render_template('pageChangeButtons.html', startResult= i * 10, pageNum=i)
     pgButtons += "</div></div>"
@@ -93,5 +103,5 @@ def query_post():
 
 
 if __name__ == '__main__':
-    app.secret_key = "TEMP VALUE CHANGE LATER"
+    app.config['SECRET_KEY'] = uuid.uuid1().hex
     app.run(debug=True)
