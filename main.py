@@ -33,12 +33,12 @@ def googleResults(params):
                 })
             except:
                 pass
-        outputHTML = ""
+        outputHTML = "<div class='content'>"
         for r in resultsDict:
             buildHTML = render_template(
                 "singleResult.html", title=r['title'], link=r['link'], directory=r["directory"], summary=r["summary"])
             outputHTML += buildHTML
-        return outputHTML
+        return outputHTML + "</div>"
     else:
         return "Err: 200 Ran into Re-Captcha, try hosting from another IP-addr or waiting a while"
 
@@ -83,12 +83,12 @@ def query_post():
         'start': session["start"],
     }
     # change page buttons
-    pgButtons = "<div class='footer'>"
+    pgButtons = "<div class='footer'><div class='pg-btn-container'>"
     totalNumberOfButtons = 10
     offset = max(0, int(session['start'] / 10) - int(totalNumberOfButtons / 2))
     for i in range(offset, offset + totalNumberOfButtons):
         pgButtons += render_template('pageChangeButtons.html', startResult= i * 10, pageNum=i)
-    pgButtons += "</div>"
+    pgButtons += "</div></div>"
     return render_template('index.html') + googleResults(params) + pgButtons
 
 
