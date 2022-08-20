@@ -39,6 +39,9 @@ def googleResults(params):
             resultsDict.append(result)
         except:
             pass
+    return resultsDict
+
+def resultsToHTML(resultsDict):
     outputHTML = "<div class='content'>"
     for r in resultsDict:
         buildHTML = render_template(
@@ -104,7 +107,7 @@ def query_post():
     for i in range(offset, offset + totalNumberOfButtons):
         pgButtons += render_template('pageChangeButtons.html', startResult= i * 10, pageNum=i)
     pgButtons += "</div></div>"
-    return render_template('index.html') + googleResults(params) + pgButtons
+    return render_template('index.html') + resultsToHTML(googleResults(params)) + pgButtons
 
 
 if __name__ == '__main__':
