@@ -18,11 +18,12 @@ def randomAgent():
     print(header)
     return header
 
+def linkRequester(url):
+    req = requests.get(url, headers = randomAgent())
+    return BeautifulSoup(req.text, "html.parser")
+
 def googleResults(params):
-    link = 'https://google.com/search?' + parse.urlencode(params)
-    print(f'forwarded to {link}')
-    req = requests.get(link, headers = randomAgent())
-    soup = BeautifulSoup(req.text, "html.parser")
+    soup = linkRequester('https://google.com/search?' + parse.urlencode(params))
     # return soup.prettify()
     ress = soup.find_all("div", class_="fP1Qef")
     resultsDict = []
