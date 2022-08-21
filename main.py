@@ -9,9 +9,6 @@ import uuid
 app = Flask(__name__)
 app.secret_key = uuid.uuid1().hex
 
-def urlParse(url):
-    return parse.parse_qs(url)
-
 def randomAgent():
     ua = UserAgent()
     header = {'User-Agent': str(ua.random)}
@@ -61,14 +58,14 @@ def index():
 @app.route('/s')
 @app.route('/search')
 def search():
-    urlparams = urlParse(request.url)
+    urlparams = parse.parse_qs(parse.urlparse(request.url).query)
     try:
-        session['q'] = urlparams.get('q')[0]
-    except:
+        session['q'] = urlparams.get('q')
+    except Exception as e:
         # if there is no query
         return redirect('/')
     try:
-        session['start'] = urlparams.get('start')[0]
+        session['start'] = urlparams.get('start')
     except:
         # by default, it should start at 0 unless denoted in the url
         session['start'] = 0
