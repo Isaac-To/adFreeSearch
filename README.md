@@ -9,6 +9,8 @@ A private, security oriented search engine
 - [x] Minimalist design, free of ads or any images (speeds up render times)
 - [x] No JS
 - [x] Doesn't store IPs, queries (except when it may print on the console (usually an accident of mine for forgetting to remove or comment out print statements used in testing))
+- [x] All interactions are made through POST requests
+- [x] A widget sidebar (shows up based on the queries featuring information from a variety of sources)
 
 ## To-Dos
 - [ ] Add support for commonly used JS frameworks so sites don't simply break.
