@@ -1,9 +1,9 @@
 <br>
-<div class="card content">
-    <h3>{{ title }}</h3>
+<span class="card">
+    <h3 card="card-title">{{ title }}</h3>
     {% if imageUrl != None %}
-    <img src="{{ imageUrl }}">
+    <img class="card-img" src="{{ imageUrl }}">
     {% endif %}
-    <p>{{ summary }}</p>
+    <p card="card-text">{{ summary }}</p>
     <a href="{{ articleUrl }}">Source: Wikipedia</a>
-</div>
+</span>

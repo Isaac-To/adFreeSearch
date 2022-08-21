@@ -16,8 +16,6 @@ def randomAgent():
 
 def linkRequester(url):
     req = requests.get(url, headers = randomAgent())
-    if req.status_code != 200:
-        return None
     return BeautifulSoup(req.text, "html.parser")
 
 def googleResults(params):
@@ -74,7 +72,21 @@ def wikipediaPage(query):
             fullSummary += summary.text
         else:
             break
+    if "may refer to:" in fullSummary and len(fullSummary) < 200:
+        return ''
     return render_template('wikipediaResults.html', title = parse.unquote(query).replace('_',' ').title(), imageUrl = imageUrl, summary = fullSummary, articleUrl = articleUrl)
+
+def wordDefinition(query):
+    if len(query.split(' ')) != 1:
+        return ''
+    link = f'https://www.merriam-webster.com/dictionary/{query}'
+    soup = linkRequester(link)
+    try:
+        text = (soup.find('span', class_ = 'dtText').get_text()) #type: ignore
+        if text.startswith(':'):
+            return render_template('definition.html', title=query.title(), text=text[1:], source = link)
+    except: pass
+    return ''
 
 def resultsToHTML(resultsDict):
     outputHTML = "<div class='content'>"
@@ -149,7 +161,16 @@ def query_post():
     pgButtons += "</div></div>"
     # wikipedia fetching
     searchResults = googleResults(params)
-    return render_template('index.html') + wikipediaInSearch(searchResults) + resultsToHTML(searchResults) + pgButtons
+    # layering
+    html = ''
+    html += render_template('index.html')
+    html += '<div class="widgetContainer">'
+    html += wordDefinition(params['q'])
+    html += wikipediaInSearch(searchResults)
+    html += '</div>'
+    html += resultsToHTML(searchResults)
+    html += pgButtons
+    return html
 
 if __name__ == '__main__':
     app.run(debug=True)
