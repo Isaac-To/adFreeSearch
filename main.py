@@ -57,6 +57,7 @@ def resultsToHTML(resultsDict):
 def index():
     return render_template("index.html")
 
+@app.route('/s')
 @app.route('/search')
 def search():
     urlparams = urlParse(request.url)
@@ -73,6 +74,7 @@ def search():
     return query_post()
 
 @app.route('/', methods=['POST'])
+@app.route('/s', methods=['POST'])
 @app.route('/search', methods=['POST'])
 def query_post():
     session.permanent = True
