@@ -168,6 +168,7 @@ def query_post():
     html += wordDefinition(params['q'])
     html += wikipediaInSearch(searchResults)
     html += '</div>'
+    html += f'<br><h3 class="content">Showing results for {params["q"]}</h3>'
     html += resultsToHTML(searchResults)
     html += pgButtons
     return html
