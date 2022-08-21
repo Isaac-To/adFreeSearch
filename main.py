@@ -20,6 +20,8 @@ def randomAgent():
 
 def linkRequester(url):
     req = requests.get(url, headers = randomAgent())
+    if req.status_code != 200:
+        return linkRequester(url)
     return BeautifulSoup(req.text, "html.parser")
 
 def googleResults(params):
