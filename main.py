@@ -10,7 +10,7 @@ app = Flask(__name__)
 app.secret_key = uuid.uuid1().hex
 
 def urlParse(url):
-    return parse.parse_qs(parse.urlparse(url).query)
+    return parse.parse_qs(url)
 
 def randomAgent():
     ua = UserAgent()
@@ -31,9 +31,7 @@ def googleResults(params):
     for r in ress:
         try:
             trackerLink = r.find("a", href=True)['href'][r.find("a", href=True)['href'].find('http'):]
-            # for fixing Google Errors
-            if 'youtube.com/watch' or 'google.com' in trackerLink:
-                trackerLink = trackerLink.replace('%3F', '?').replace('%3D', '=').replace('%26', '&')
+            trackerLink = parse.unquote(trackerLink)
             strippedLink = trackerLink[:trackerLink.find('&')]
             result = {
                 'title': r.find("h3").text,
@@ -42,7 +40,8 @@ def googleResults(params):
                 'summary': r.find("div", class_="BNeawe s3v9rd AP7Wnd").text,
             }
             resultsDict.append(result)
-        except:
+        except Exception as e:
+            print(e)
             pass
     return resultsDict
 
@@ -98,7 +97,7 @@ def query_post():
             for link in links:
                 # converts to full links
                 if (link.get("href")).startswith("/"):
-                    link['href'] = "https://" + str((parse.urlparse(request.form.get('proxy-btn'))).netloc) + link["href"],
+                    link['href'] = "https://" + str((parse.urlparse(request.form.get('proxy-btn'))).hostname) + link["href"],
             return soup.prettify()
     params = {
         'q': session["q"],
