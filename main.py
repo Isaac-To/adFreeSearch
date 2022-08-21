@@ -105,12 +105,12 @@ def index():
 def search():
     urlparams = parse.parse_qs(parse.urlparse(request.url).query)
     try:
-        session['q'] = urlparams.get('q')
+        session['q'] = urlparams.get('q')[0] #type: ignore
     except Exception as e:
         # if there is no query
         return redirect('/')
     try:
-        session['start'] = urlparams.get('start')
+        session['start'] = urlparams.get('start')[0] # type: ignore
     except:
         # by default, it should start at 0 unless denoted in the url
         session['start'] = 0
