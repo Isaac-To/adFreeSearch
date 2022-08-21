@@ -67,8 +67,8 @@ def wikipediaPage(query):
     summarySnippet = soup.find_all("p") # type: ignore
     fullSummary = ""
     for summary in summarySnippet:
-        # gets the first 1000 or so characters
-        if len(fullSummary) < 1000:
+        # gets the first 500 or so characters
+        if len(fullSummary) < 500:
             fullSummary += summary.text
         else:
             break

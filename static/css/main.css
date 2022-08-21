@@ -58,7 +58,7 @@ small {
 
 .widgetContainer {
     float: right;
-    width: 45%;
+    width: 30%;
     margin: 2%;
 }
 
@@ -79,7 +79,7 @@ small {
 }
 
 .result-box {
-    max-width: 50%;
+    width: 70%;
     margin-bottom: 2%;
 }
 
