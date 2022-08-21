@@ -1,5 +1,5 @@
 from distutils.command.build import build
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, redirect
 from bs4 import BeautifulSoup
 from urllib import parse
 import requests
@@ -25,6 +25,7 @@ def linkRequester(url):
 def googleResults(params):
     soup = linkRequester('https://google.com/search?' + parse.urlencode(params))
     # return soup.prettify()
+    # fP1Qef is the class used to represent each result for google
     ress = soup.find_all("div", class_="fP1Qef")
     resultsDict = []
     for r in ress:
@@ -60,13 +61,12 @@ def search():
     try:
         session['q'] = urlparams.get('q')[0]
     except:
-        session['q'] = 'Privacy tips'
+        # if there is no query
+        return redirect('/')
     try:
-        if urlparams.get('start') == None:
-            session["start"] = 0
-        else:
-            session['start'] = urlparams.get('start')[0]
+        session['start'] = urlparams.get('start')[0]
     except:
+        # by default, it should start at 0 unless denoted in the url
         session['start'] = 0
     return query_post()
 
