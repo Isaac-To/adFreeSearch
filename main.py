@@ -32,6 +32,10 @@ def googleResults(params):
         try:
             trackerLink = r.find("a", href=True)['href'][r.find("a", href=True)['href'].find('http'):]
             strippedLink = trackerLink[:trackerLink.find('&')]
+            # for fixing Youtube Errors
+            if 'youtube.com/watch' in strippedLink:
+                strippedLink = strippedLink.replace('%3F', '?').replace('%3D', '=')
+                print(strippedLink)
             result = {
                 'title': r.find("h3").text,
                 'link': strippedLink,
