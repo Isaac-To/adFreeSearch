@@ -55,7 +55,7 @@ def resultsToHTML(resultsDict):
 
 @app.route('/')
 def index():
-    return render_template("index.html")
+    return f'<h1 class="brand-name">{parse.urlparse(request.url).hostname}</h1>' + render_template("index.html")
 
 @app.route('/s')
 @app.route('/search')
@@ -82,6 +82,8 @@ def query_post():
     if request.method == "POST":
         if request.form.get('query') != None:
             session['q'] = request.form.get('query')  # type: ignore
+            if session["q"] == "":
+                return redirect("/")
             session['start'] = 0
         elif request.form.get('pg-btn') != None:
             # page change button backend

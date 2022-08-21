@@ -20,27 +20,34 @@ small {
     font-size: small;
 }
 
-.header {
-    background-color: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(2px) saturate(150%);
-    box-shadow: 0px 0px 4px lightgray;
+.brand-name {
     width: 100%;
+    margin-top: 15%;
+    transform: translateY(-50%);
+    text-align: center;
+}
+
+.header {
     position: sticky;
     top: 0;
-    padding-top: 2%;
-    padding-bottom: 2%;
 }
 
 .input-text {
+    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(2px) saturate(150%);
+    box-shadow: 0px 0px 2px lightgray;
+    width: 100%;
+    padding-top: 2%;
+    padding-bottom: 2%;
     font-size: x-large;
     color: gray;
     text-align: center;
-    margin-left: 50%;
     border: none;
-    background-color: transparent;
-    width: 75%;
-    transform: translateX(-50%);
     outline: none;
+}
+
+.input-text:focus {
+    box-shadow: 0px 0px 8px lightgray;
 }
 
 .content {
