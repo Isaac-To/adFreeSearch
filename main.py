@@ -105,10 +105,12 @@ def query_post():
                 if (link.get("href")).startswith("/"):
                     link['href'] = "https://" + str((parse.urlparse(request.form.get('proxy-btn'))).hostname) + link["href"],
             return soup.prettify()
-    params = {
-        'q': session["q"],
-        'start': session["start"],
-    }
+    params = dict()
+    # incase errors
+    try: params['q'] = session['q']
+    except: return(redirect('/'))
+    try: params['start'] = session["start"]
+    except: params["start"] = 0
     # change page buttons
     pgButtons = "<div class='footer'><div class='pg-btn-container'>"
     totalNumberOfButtons = 10
