@@ -17,14 +17,14 @@ def randomAgent():
 def linkRequester(url):
     req = requests.get(url, headers = randomAgent())
     if req.status_code != 200:
-        return linkRequester(url)
+        return None
     return BeautifulSoup(req.text, "html.parser")
 
 def googleResults(params):
     soup = linkRequester('https://google.com/search?' + parse.urlencode(params))
     # return soup.prettify()
     # fP1Qef is the class used to represent each result for google
-    ress = soup.find_all("div", class_="fP1Qef")
+    ress = soup.find_all("div", class_="fP1Qef") #type: ignore
     resultsDict = []
     for r in ress:
         try:
@@ -42,6 +42,39 @@ def googleResults(params):
             print(e)
             pass
     return resultsDict
+
+def wikipediaInSearch(results):
+    for res in results:
+        if 'wikipedia.org' in res['link']:
+            return wikipediaPage(res['link'][res['link'].rfind('/') + 1:])
+    return ''
+
+def wikipediaPage(query):
+    if query == None:
+        return ''
+    articleUrl = f'https://wikipedia.org/wiki/{query}'
+    soup = linkRequester(articleUrl)
+    if soup == None:
+        return ""
+    imgs = soup.find_all("img", src=True)  # type: ignore
+    imageUrl = None
+    for img in imgs:
+        if query in img.get('src'):
+            imageUrl = img.get('src')
+            break
+    links = soup.findAll("a", href=True)
+    for link in links:
+        if link.get('href').startswith('#cite'):
+            link.decompose()
+    summarySnippet = soup.find_all("p") # type: ignore
+    fullSummary = ""
+    for summary in summarySnippet:
+        # gets the first 1000 or so characters
+        if len(fullSummary) < 1000:
+            fullSummary += summary.text
+        else:
+            break
+    return render_template('wikipediaResults.html', title = parse.unquote(query).replace('_',' ').title(), imageUrl = imageUrl, summary = fullSummary, articleUrl = articleUrl)
 
 def resultsToHTML(resultsDict):
     outputHTML = "<div class='content'>"
@@ -114,8 +147,9 @@ def query_post():
     for i in range(offset, offset + totalNumberOfButtons):
         pgButtons += render_template('pageChangeButtons.html', startResult= i * 10, pageNum=i)
     pgButtons += "</div></div>"
-    return render_template('index.html') + resultsToHTML(googleResults(params)) + pgButtons
-
+    # wikipedia fetching
+    searchResults = googleResults(params)
+    return render_template('index.html') + wikipediaInSearch(searchResults) + resultsToHTML(searchResults) + pgButtons
 
 if __name__ == '__main__':
     app.run(debug=True)
