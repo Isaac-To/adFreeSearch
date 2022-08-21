@@ -15,7 +15,6 @@ def urlParse(url):
 def randomAgent():
     ua = UserAgent()
     header = {'User-Agent': str(ua.random)}
-    print(header)
     return header
 
 def linkRequester(url):
