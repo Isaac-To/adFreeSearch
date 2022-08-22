@@ -47,11 +47,10 @@ def query_post():
     session.permanent = True
     # if there is a new query from the search bar or an update from the page buttons
     if request.method == "POST":
-        if request.form.get('query') != None:
+        if request.form.get('mode') != None:
+            session['mode'] = request.form.get('mode')
+        elif request.form.get('query') != None:
             session['q'] = request.form.get('query')  # type: ignore
-            if session["q"] == "":
-                return redirect("/")
-            session['start'] = 0
         elif request.form.get('pg-btn') != None:
             # page change button backend
             session['start'] = int(request.form.get('pg-btn')) # type: ignore
@@ -74,7 +73,12 @@ def query_post():
             return req.text
     params = dict()
     # incase errors
-    try: params['q'] = session['q']
+    try:
+        # incase there is no query
+        if session["q"] == "":
+            session['start'] = 0
+            return redirect("/")
+        params['q'] = session['q']
     except: return(redirect('/'))
     try: params['start'] = session["start"]
     except: params["start"] = 0
@@ -85,19 +89,22 @@ def query_post():
         pgButtons += f'Page {int(params["start"] / 10) + 1}'
     pgButtons += render_template('pageChangeButtons.html', title = 'Next Page', startResult=params['start'] + 10)
     pgButtons += '</div>'
-    # wikipedia fetching
-    searchResults = googleResults(params)
-    # layering
-    html = ''
-    html += render_template('index.html')
-    html += '<div class="widgetContainer">'
-    html += wordDefinition(params['q'])
-    html += wikipediaInSearch(searchResults)
-    html += '</div>'
-    html += f'<br><h3 class="content">Showing results for {params["q"]}</h3>'
-    html += resultsToHTML(searchResults)
-    html += pgButtons
-    return html
+    if session.get('mode') == "search":
+        # wikipedia fetching
+        searchResults = googleResults(params)
+        # layering
+        html = ''
+        html += render_template('index.html')
+        html += '<div class="widgetContainer">'
+        html += wordDefinition(params['q'])
+        html += wikipediaInSearch(searchResults)
+        html += '</div>'
+        html += f'<br><h3 class="content">Showing results for {params["q"]}</h3>'
+        html += resultsToHTML(searchResults)
+        html += pgButtons
+        return html
+    if session.get("mode") == "images":
+        return 'IMAGES INSTRUCTIONS PLACEHOLDER'
 
 if __name__ == '__main__':
     app.run(debug=True)

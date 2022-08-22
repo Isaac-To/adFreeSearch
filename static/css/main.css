@@ -88,6 +88,11 @@ small {
     display: inline;
 }
 
+.btn-row {
+    margin-top: 1%;
+    text-align: center;
+}
+
 .proxy-btn {
     color: gray;
     background-color: transparent;
@@ -104,8 +109,8 @@ small {
 
 .pg-btn {
     width: fit-content;
-    padding: 1%;
-    background-color: transparent;
+    padding: 0.5%;
+    background-color: white;
     color: gray;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 24px;
