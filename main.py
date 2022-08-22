@@ -60,7 +60,7 @@ def query_post():
         elif request.form.get('proxy-btn') != None:
             # proxy button backend
             req = requests.get(request.form.get('proxy-btn'), headers = randomAgent())  # type: ignore
-            soup = BeautifulSoup(req.text, "html.parser")
+            # soup = BeautifulSoup(req.text, "html.parser")
             # removes all references to external elements if flagged to be an ad/tracker BEING WORKED ON
             # externalElements = soup.find_all(href=True)
             # externalElements.extend(soup.find_all(src=True))
