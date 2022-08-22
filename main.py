@@ -46,31 +46,31 @@ def search():
 def query_post():
     session.permanent = True
     # if there is a new query from the search bar or an update from the page buttons
-    if request.method == "POST":
-        if request.form.get('mode') != None:
-            session['mode'] = request.form.get('mode')
-        elif request.form.get('query') != None:
-            session['q'] = request.form.get('query')  # type: ignore
-        elif request.form.get('pg-btn') != None:
-            # page change button backend
-            session['start'] = int(request.form.get('pg-btn')) # type: ignore
-        elif request.form.get('proxy-btn') != None:
-            # proxy button backend
-            req = requests.get(request.form.get('proxy-btn'), headers = randomAgent())  # type: ignore
-            # soup = BeautifulSoup(req.text, "html.parser")
-            # removes all references to external elements if flagged to be an ad/tracker BEING WORKED ON
-            # externalElements = soup.find_all(href=True)
-            # externalElements.extend(soup.find_all(src=True))
-            # for elem in externalElements:
-            #     try:
-            #         if adLists.compareURL(elem.get('href')):
-            #             elem.decompose()
-            #     except: pass
-            #     try:
-            #         if adLists.compareURL(elem.get('src')):
-            #             elem.decompose()
-            #     except: pass
-            return req.text
+    if request.form.get('query') != None:
+        session['mode'] = request.form.get("mode")
+        if session["mode"] == "":
+            session["mode"] = 'search'
+        session['q'] = request.form.get('query')  # type: ignore
+    elif request.form.get('pg-btn') != None:
+        # page change button backend
+        session['start'] = int(request.form.get('pg-btn')) # type: ignore
+    elif request.form.get('proxy-btn') != None:
+        # proxy button backend
+        req = requests.get(request.form.get('proxy-btn'), headers = randomAgent())  # type: ignore
+        # soup = BeautifulSoup(req.text, "html.parser")
+        # removes all references to external elements if flagged to be an ad/tracker BEING WORKED ON
+        # externalElements = soup.find_all(href=True)
+        # externalElements.extend(soup.find_all(src=True))
+        # for elem in externalElements:
+        #     try:
+        #         if adLists.compareURL(elem.get('href')):
+        #             elem.decompose()
+        #     except: pass
+        #     try:
+        #         if adLists.compareURL(elem.get('src')):
+        #             elem.decompose()
+        #     except: pass
+        return req.text
     params = dict()
     # incase errors
     try:

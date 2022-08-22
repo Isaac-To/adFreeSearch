@@ -33,6 +33,36 @@ small {
     top: 0;
 }
 
+
+input[type="radio"] {
+    display: none;
+}
+
+input[type="radio"]+label:before {
+    color: black;
+    display: inline-block;
+    width: 80px;
+    height: 20px;
+    margin: 0.5%;
+    background-clip: content-box;
+    background-color: #e7e6e7;
+    border-radius: 24px;
+}
+
+/* appearance for checked radiobutton */
+input[type="radio"]:checked+label:before {
+    color: white;
+    background-color: #41A4D3;
+}
+
+#searchMark+label:before {
+    content: "Search";
+}
+
+#imagesMark+label:before {
+    content: "Images";
+}
+
 .input-text {
     background-color: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(2px) saturate(150%);
@@ -118,7 +148,7 @@ small {
 }
 
 .pg-btn:hover {
-    border: 1px solid #41A4D3;  
+    border: 1px solid #41A4D3;
 }
 
 .result-box {
@@ -128,6 +158,7 @@ small {
 .title {
     margin: 0;
 }
+
 .footer {
     margin-top: 5%;
     margin-bottom: 5%;
