@@ -79,12 +79,12 @@ def query_post():
     try: params['start'] = session["start"]
     except: params["start"] = 0
     # change page buttons
-    pgButtons = "<div class='footer'><div class='pg-btn-container'>"
-    totalNumberOfButtons = 10
-    offset = max(0, int((session['start'] if session['start'] != None else 0) / 10) - int(totalNumberOfButtons / 2))
-    for i in range(offset, offset + totalNumberOfButtons):
-        pgButtons += render_template('pageChangeButtons.html', startResult= i * 10, pageNum=i)
-    pgButtons += "</div></div>"
+    pgButtons = '<div class="footer">'
+    if params['start'] >= 10:
+        pgButtons += render_template('pageChangeButtons.html', title = 'Previous Page', startResult=params['start'] - 10)
+        pgButtons += f'Page {int(params["start"] / 10) + 1}'
+    pgButtons += render_template('pageChangeButtons.html', title = 'Next Page', startResult=params['start'] + 10)
+    pgButtons += '</div>'
     # wikipedia fetching
     searchResults = googleResults(params)
     # layering

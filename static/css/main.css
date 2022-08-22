@@ -102,13 +102,12 @@ small {
 }
 
 .pg-btn {
-    width: 40px;
-    height: 40px;
+    width: fit-content;
+    padding: 1%;
     background-color: transparent;
     color: gray;
     border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 100%;
-    margin: 1%;
+    border-radius: 24px;
     transition: ease-in-out 0.2s;
 }
 
