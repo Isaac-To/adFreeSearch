@@ -1,2 +1,4 @@
 /Pipfile
 /Pipfile.lock
+filterLists.txt
+__pycache__/adLists.cpython-39.pyc

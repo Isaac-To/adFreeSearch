@@ -6,6 +6,9 @@ import requests
 from fake_useragent import UserAgent
 import uuid
 
+# self wrote
+import adLists
+
 app = Flask(__name__)
 app.secret_key = uuid.uuid1().hex
 
@@ -139,7 +142,19 @@ def query_post():
             # proxy button backend
             req = requests.get(request.form.get('proxy-btn'), headers = randomAgent())  # type: ignore
             soup = BeautifulSoup(req.text, "html.parser")
-            return soup.prettify()
+            # removes all references to external elements if flagged to be an ad/tracker BEING WORKED ON
+            # externalElements = soup.find_all(href=True)
+            # externalElements.extend(soup.find_all(src=True))
+            # for elem in externalElements:
+            #     try:
+            #         if adLists.compareURL(elem.get('href')):
+            #             elem.decompose()
+            #     except: pass
+            #     try:
+            #         if adLists.compareURL(elem.get('src')):
+            #             elem.decompose()
+            #     except: pass
+            return req.text
     params = dict()
     # incase errors
     try: params['q'] = session['q']
