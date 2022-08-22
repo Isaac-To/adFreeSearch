@@ -1,6 +1,4 @@
-from distutils.command.build import build
 from flask import Flask, render_template, request, session, redirect
-from bs4 import BeautifulSoup
 from urllib import parse
 import requests
 import uuid
