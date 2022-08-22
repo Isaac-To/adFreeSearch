@@ -139,16 +139,6 @@ def query_post():
             # proxy button backend
             req = requests.get(request.form.get('proxy-btn'), headers = randomAgent())  # type: ignore
             soup = BeautifulSoup(req.text, "html.parser")
-            # strips external JS. Only allows transparent on page js.
-            scripts = soup.find_all('script', src=True)
-            for script in scripts: 
-                script.decompose()
-            links = soup.find_all("a", href=True)
-            # applies proxy on links as well
-            for link in links:
-                # converts to full links
-                if (link.get("href")).startswith("/"):
-                    link['href'] = "https://" + str((parse.urlparse(request.form.get('proxy-btn'))).hostname) + link["href"],
             return soup.prettify()
     params = dict()
     # incase errors
