@@ -2,3 +2,7 @@
 /Pipfile.lock
 filterLists.txt
 __pycache__/adLists.cpython-39.pyc
+websources/__pycache__/google.cpython-39.pyc
+websources/__pycache__/merriamwebster.cpython-39.pyc
+websources/__pycache__/tools.cpython-39.pyc
+websources/__pycache__/wikipedia.cpython-39.pyc

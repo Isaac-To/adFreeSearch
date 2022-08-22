@@ -3,97 +3,16 @@ from flask import Flask, render_template, request, session, redirect
 from bs4 import BeautifulSoup
 from urllib import parse
 import requests
-from fake_useragent import UserAgent
 import uuid
 
 # self wrote
-import adLists
+# import adLists
+from websources.google import googleResults
+from websources.merriamwebster import wordDefinition
+from websources.wikipedia import wikipediaInSearch
 
 app = Flask(__name__)
 app.secret_key = uuid.uuid1().hex
-
-def randomAgent():
-    ua = UserAgent()
-    header = {'User-Agent': str(ua.random)}
-    return header
-
-def linkRequester(url):
-    req = requests.get(url, headers = randomAgent())
-    if req.status_code not in range(200, 299):
-        # try again one more time
-        req = requests.get(url, headers = randomAgent())
-    # print(req.status_code, url)
-    return BeautifulSoup(req.text, "html.parser")
-
-def googleResults(params):
-    soup = linkRequester('https://google.com/search?' + parse.urlencode(params))
-    # return soup.prettify()
-    # fP1Qef is the class used to represent each result for google
-    ress = soup.find_all("div", class_="fP1Qef") #type: ignore
-    resultsDict = []
-    for r in ress:
-        try:
-            trackerLink = r.find("a", href=True)['href'][r.find("a", href=True)['href'].find('http'):]
-            trackerLink = parse.unquote(trackerLink)
-            strippedLink = trackerLink[:trackerLink.find('&')]
-            result = {
-                'title': r.find("h3").text,
-                'link': strippedLink,
-                'directory': r.find("div", class_="UPmit").text,
-                'summary': r.find("div", class_="BNeawe s3v9rd AP7Wnd").text,
-            }
-            resultsDict.append(result)
-        except Exception as e:
-            print(e)
-            pass
-    return resultsDict
-
-def wikipediaInSearch(results):
-    for res in results:
-        if 'wikipedia.org' in res['link']:
-            return wikipediaPage(res['link'][res['link'].rfind('/') + 1:])
-    return ''
-
-def wikipediaPage(query):
-    if query == None:
-        return ''
-    articleUrl = f'https://wikipedia.org/wiki/{query}'
-    soup = linkRequester(articleUrl)
-    if soup == None:
-        return ""
-    imgs = soup.find_all("img", src=True)  # type: ignore
-    imageUrl = None
-    for img in imgs:
-        if query in img.get('src'):
-            imageUrl = img.get('src')
-            break
-    links = soup.findAll("a", href=True)
-    for link in links:
-        if link.get('href').startswith('#cite'):
-            link.decompose()
-    summarySnippet = soup.find_all("p") # type: ignore
-    fullSummary = ""
-    for summary in summarySnippet:
-        # gets the first 500 or so characters
-        if len(fullSummary) < 500:
-            fullSummary += summary.text
-        else:
-            break
-    if "may refer to:" in fullSummary and len(fullSummary) < 200:
-        return ''
-    return render_template('wikipediaResults.html', title = parse.unquote(query).replace('_',' ').title(), imageUrl = imageUrl, summary = fullSummary, articleUrl = articleUrl)
-
-def wordDefinition(query):
-    if len(query.split(' ')) != 1:
-        return ''
-    link = f'https://www.merriam-webster.com/dictionary/{query}'
-    soup = linkRequester(link)
-    try:
-        text = (soup.find('span', class_ = 'dtText').get_text()) #type: ignore
-        if text.startswith(':'):
-            return render_template('definition.html', title=query.title(), text=text[1:], source = link)
-    except: pass
-    return ''
 
 def resultsToHTML(resultsDict):
     outputHTML = "<div class='content'>"
