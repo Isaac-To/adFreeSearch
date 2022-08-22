@@ -16,6 +16,10 @@ def randomAgent():
 
 def linkRequester(url):
     req = requests.get(url, headers = randomAgent())
+    if req.status_code not in range(200, 299):
+        # try again one more time
+        req = requests.get(url, headers = randomAgent())
+    # print(req.status_code, url)
     return BeautifulSoup(req.text, "html.parser")
 
 def googleResults(params):
