@@ -27,6 +27,8 @@ def index():
 @app.route('/s')
 @app.route('/search')
 def search():
+    # all queries made through the addr bar should be considered a search
+    session['mode'] = 'search'
     urlparams = parse.parse_qs(parse.urlparse(request.url).query)
     try:
         session['q'] = urlparams.get('q')[0] #type: ignore
