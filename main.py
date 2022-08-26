@@ -11,17 +11,11 @@ from websources.merriamwebster import wordDefinition
 from websources.wikipedia import wikipediaInSearch
 # images
 from websources.image_deviantArt import deviantArtResults
+# tools
+from websources.tools import resultsToHTML, imgResultsToHTML
 
 app = Flask(__name__)
 app.secret_key = uuid.uuid1().hex
-
-def resultsToHTML(resultsDict):
-    outputHTML = "<div class='content'>"
-    for r in resultsDict:
-        buildHTML = render_template(
-            "singleResult.html", title=r['title'], link=r['link'], directory=r["directory"], summary=r["summary"])
-        outputHTML += buildHTML
-    return outputHTML + "</div>"
 
 @app.route('/')
 def index():
@@ -106,11 +100,12 @@ def query_post():
         html += '</div>'
         html += f'<br><h3 class="content">Showing results for {params["q"]}</h3>'
         html += resultsToHTML(searchResults)
-        html += pgButtons
-        return html
     if session.get("mode") == "images":
-        html += str(deviantArtResults(params['q']))
-        return html
+        html += '<div class="content ">'
+        html += imgResultsToHTML(deviantArtResults(params))
+        html += "</div>"
+    html += pgButtons
+    return html
 
 if __name__ == '__main__':
     app.run(debug=True)

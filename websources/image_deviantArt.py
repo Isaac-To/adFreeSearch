@@ -1,15 +1,17 @@
 from .tools import linkRequester
-from flask import render_template
+from urllib import parse
 
-def deviantArtResults(query):
-    soup = linkRequester(f'https://www.deviantart.com/search/deviations?q={query}')
-    images = soup.find_all('img', src=True)
-    links = []
-    for i in images:
-        if i.get('src').startswith('https://images-wixmp'):
-            links.append(i.get('src'))
-    HTML = "<div class='content img-container'>"
-    for l in links:
-        HTML += render_template('imageResults.html', source=l)
-    HTML += "</div>"
-    return HTML
+def deviantArtResults(params):
+    dvArtParams = params.copy()
+    dvArtParams["page"] = params.get('start') / 10
+    soup = linkRequester(
+        f'https://www.deviantart.com/search/deviations?{parse.urlencode(dvArtParams)}')
+    img_items = soup.find_all('a', href=True)
+    results = []
+    for item in img_items:
+        imgs = item.find_all(src=True)
+        for img in imgs:
+            if img.get('src').startswith('https://images-wixmp'):
+                results.append({"source": img.get('src'),
+                            "link": item.get('href')})
+    return results
