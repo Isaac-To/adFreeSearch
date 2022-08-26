@@ -5,9 +5,12 @@ import uuid
 
 # self wrote
 # import adLists
+# search
 from websources.google import googleResults
 from websources.merriamwebster import wordDefinition
 from websources.wikipedia import wikipediaInSearch
+# images
+from websources.image_deviantArt import deviantArtResults
 
 app = Flask(__name__)
 app.secret_key = uuid.uuid1().hex
@@ -22,7 +25,7 @@ def resultsToHTML(resultsDict):
 
 @app.route('/')
 def index():
-    return f'<h1 class="brand-name">{parse.urlparse(request.url).hostname}</h1>' + render_template("index.html")
+    return f'<h1 class="brand-name">{parse.urlparse(request.url).hostname}</h1>' + render_template("index.html", mode='search')
 
 @app.route('/s')
 @app.route('/search')
@@ -91,12 +94,12 @@ def query_post():
         pgButtons += f'Page {int(params["start"] / 10) + 1}'
     pgButtons += render_template('pageChangeButtons.html', title = 'Next Page', startResult=params['start'] + 10)
     pgButtons += '</div>'
+    html = ''
+    html += render_template('index.html', mode=session['mode'])
     if session.get('mode') == "search":
         # wikipedia fetching
         searchResults = googleResults(params)
         # layering
-        html = ''
-        html += render_template('index.html')
         html += '<div class="widgetContainer">'
         html += wordDefinition(params['q'])
         html += wikipediaInSearch(searchResults)
@@ -106,7 +109,8 @@ def query_post():
         html += pgButtons
         return html
     if session.get("mode") == "images":
-        return 'IMAGES INSTRUCTIONS PLACEHOLDER'
+        html += str(deviantArtResults(params['q']))
+        return html
 
 if __name__ == '__main__':
     app.run(debug=True)

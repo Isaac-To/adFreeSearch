@@ -6,14 +6,25 @@
     <form method="POST" class="btn-container">    
         <input type="text" name="query" class="input-text" placeholder="Make a private search">
         <div class="btn-row">
-            <span class="radio">
-                <input type="radio", id="searchMark" name="mode" value="search" checked="checked">
-                <label for="searchMark"></label>
-            </span>
-            <span class="radio">
-                <input type="radio", id="imagesMark" name="mode" value="images">
-                <label for="imagesMark"></label>
-            </span>
+            {% if mode == 'search' %}
+                <span class="radio">
+                    <input type="radio", id="searchMark" name="mode" value="search" checked="checked">
+                    <label for="searchMark"></label>
+                </span>
+                <span class="radio">
+                    <input type="radio", id="imagesMark" name="mode" value="images">
+                    <label for="imagesMark"></label>
+                </span>
+            {% elif mode=='images' %}
+                <span class="radio">
+                    <input type="radio", id="searchMark" name="mode" value="search">
+                    <label for="searchMark"></label>
+                </span>
+                <span class="radio">
+                    <input type="radio", id="imagesMark" name="mode" value="images" checked="checked">
+                    <label for="imagesMark"></label>
+                </span>
+            {% endif %}
         </div>
     </form>
 </div>
