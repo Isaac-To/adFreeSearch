@@ -5,6 +5,7 @@ from flask import render_template
 from urllib import parse
 
 def linkRequester(url):
+    # print(url)
     req = requests.get(url, headers = randomAgent())
     if req.status_code not in range(200, 299):
         # try again one more time
@@ -67,4 +68,3 @@ def relevancyByOccurances(listOfResults):
                 rankedList[-1]['source'] = ', '.join(rankings.pop(result.get("title")))
                 break
     return rankedList
-    

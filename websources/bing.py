@@ -4,6 +4,7 @@ def bingResults(params):
     bingParams = params.copy()
     if params.get('start') != 0:
         bingParams['first'] = params.get("start") + 1
+    del bingParams['start']
     soup = linkRequester('https://bing.com/search?' + parse.urlencode(bingParams))
     # return soup.prettify()
     # fP1Qef is the class used to represent each result for google
