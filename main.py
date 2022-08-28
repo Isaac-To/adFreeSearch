@@ -13,7 +13,7 @@ from websources.wikipedia import wikipediaInSearch
 # images
 from websources.image_deviantArt import deviantArtResults
 # tools
-from websources.tools import resultsToHTML, imgResultsToHTML, relevancyByOccurances
+from websources.tools import resultsToHTML, imgResultsToHTML, relevancyByOccurances, randomAgent
 
 app = Flask(__name__)
 app.secret_key = uuid.uuid1().hex
