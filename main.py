@@ -13,7 +13,7 @@ from websources.wikipedia import wikipediaInSearch
 # images
 from websources.image_deviantArt import deviantArtResults
 # tools
-from websources.tools import resultsToHTML, imgResultsToHTML, relevancyByOccurances, randomAgent
+from websources.tools import resultsToHTML, imgResultsToHTML, relevancyByOccurances, randomAgent, interlace
 
 app = Flask(__name__)
 app.secret_key = uuid.uuid1().hex
@@ -95,8 +95,8 @@ def query_post():
         # fetching
         googleSearchResults = googleResults(params)
         bingSearchResults = bingResults(params)
-        googleSearchResults.extend(bingSearchResults)
-        combinedSearchResults = relevancyByOccurances(googleSearchResults)
+        interlacedResults = interlace([googleSearchResults, bingSearchResults])
+        combinedSearchResults = relevancyByOccurances(interlacedResults)
         # widget fetching
         definitionWidget = wordDefinition(params)
         wikipediaResultWidget = wikipediaInSearch(combinedSearchResults)

@@ -31,6 +31,21 @@ def imgResultsToHTML(resultsDict):
         outputHTML += render_template('imageResults.html', link = r['link'], source = r["source"])
     return outputHTML
 
+def interlace(containsMultipleLists):
+    newList = []
+    j = 0
+    while True:
+        if j >= len(containsMultipleLists):
+            j = 0
+        for i in range(len(containsMultipleLists)):
+            if len(containsMultipleLists[i]) > 0:
+                break
+        else:
+            break
+        newList.append(containsMultipleLists[j].pop(0))
+        j+=1
+    return newList
+
 def relevancyByOccurances(listOfResults):
     rankings = {}
     for result in listOfResults:
