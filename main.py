@@ -7,6 +7,7 @@ import uuid
 # import adLists
 # search
 from websources.google import googleResults
+from websources.bing import bingResults
 from websources.merriamwebster import wordDefinition
 from websources.wikipedia import wikipediaInSearch
 # images
@@ -100,6 +101,7 @@ def query_post():
         html += '</div>'
         html += f'<br><h3 class="content">Showing results for {params["q"]}</h3>'
         html += resultsToHTML(googleSearchResults)
+        html += resultsToHTML(bingResults(params))
     if session.get("mode") == "images":
         html += '<div class="content ">'
         html += imgResultsToHTML(deviantArtResults(params))
