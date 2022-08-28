@@ -2,7 +2,8 @@ from .tools import linkRequester
 from urllib import parse
 def bingResults(params):
     bingParams = params.copy()
-    bingParams['first'] = params.get("start") + 1
+    if params.get('start') != 0:
+        bingParams['first'] = params.get("start") + 1
     soup = linkRequester('https://bing.com/search?' + parse.urlencode(bingParams))
     # return soup.prettify()
     # fP1Qef is the class used to represent each result for google
