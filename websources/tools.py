@@ -51,20 +51,20 @@ def relevancyByOccurances(listOfResults):
     rankings = {}
     for result in listOfResults:
         if rankings.get(result.get('title')):
-            rankings[result.get('title')] += 1
+            rankings[result.get('title')].append(result.get('source'))
         else:
-            rankings[result.get('title')] = 1
+            rankings[result.get('title')] = [result.get("source")]
     rankedList = []
     while len(rankings) > 0:
         max = [0, '']
         for title in rankings.keys():
-            if rankings[title] > max[0]:
-                max[0] = rankings[title]
+            if len(rankings[title]) > max[0]:
+                max[0] = len(rankings[title])
                 max[1] = title
         for result in listOfResults:
             if result.get("title") == max[1]:
                 rankedList.append(result)
-                rankings.pop(result.get("title"))
+                rankedList[-1]['source'] = ', '.join(rankings.pop(result.get("title")))
                 break
     return rankedList
     
