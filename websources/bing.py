@@ -14,7 +14,7 @@ def bingResults(params):
             result = {
                 'title': r.find('h2').text,
                 'link': r.find("div", class_ ="b_attribution").text,
-                'directory': '',
+                'source': 'bing.com',
                 'summary': r.find("p").text,
             }
             resultsDict.append(result)

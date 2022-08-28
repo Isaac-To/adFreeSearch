@@ -17,7 +17,7 @@ def googleResults(params):
             result = {
                 'title': r.find("h3").text,
                 'link': strippedLink,
-                'directory': r.find("div", class_="UPmit").text,
+                'source': 'google.com',
                 'summary': r.find("div", class_="BNeawe s3v9rd AP7Wnd").text,
             }
             resultsDict.append(result)
