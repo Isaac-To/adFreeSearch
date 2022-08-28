@@ -98,13 +98,13 @@ def query_post():
         interlacedResults = interlace([googleSearchResults, bingSearchResults])
         combinedSearchResults = relevancyByOccurances(interlacedResults)
         # widget fetching
-        definitionWidget = wordDefinition(params)
-        wikipediaResultWidget = wikipediaInSearch(combinedSearchResults)
+        widgets = '<div class="widgetContainer">'
+        if session.get('start') == 0:
+            widgets += wordDefinition(params)
+            widgets += wikipediaInSearch(combinedSearchResults)
+        widgets += '</div>'
         # layering
-        html += '<div class="widgetContainer">'
-        html += definitionWidget
-        html += wikipediaResultWidget
-        html += '</div>'
+        html += widgets
         html += f'<br><h3 class="content">Showing results for {params["q"]}</h3>'
         html += resultsToHTML(combinedSearchResults)
     if session.get("mode") == "images":
