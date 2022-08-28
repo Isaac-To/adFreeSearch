@@ -51,20 +51,20 @@ def interlace(containsMultipleLists):
 def relevancyByOccurances(listOfResults):
     rankings = {}
     for result in listOfResults:
-        if rankings.get(result.get('title')):
-            rankings[result.get('title')].append(result.get('source'))
+        if rankings.get(result.get('link')):
+            rankings[result.get('link')].append(result.get('source'))
         else:
-            rankings[result.get('title')] = [result.get("source")]
+            rankings[result.get('link')] = [result.get("source")]
     rankedList = []
     while len(rankings) > 0:
         max = [0, '']
-        for title in rankings.keys():
-            if len(rankings[title]) > max[0]:
-                max[0] = len(rankings[title])
-                max[1] = title
+        for link in rankings.keys():
+            if len(rankings[link]) > max[0]:
+                max[0] = len(rankings[link])
+                max[1] = link
         for result in listOfResults:
-            if result.get("title") == max[1]:
+            if result.get("link") == max[1]:
                 rankedList.append(result)
-                rankedList[-1]['source'] = ', '.join(rankings.pop(result.get("title")))
+                rankedList[-1]['source'] = ', '.join(rankings.pop(result.get("link")))
                 break
     return rankedList

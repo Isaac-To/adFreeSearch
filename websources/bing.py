@@ -11,10 +11,15 @@ def bingResults(params):
     ress = soup.find_all("li", class_="b_algo") #type: ignore
     resultsDict = []
     for r in ress:
+        link = r.find("div", class_ ="b_attribution").text
+        if not link.startswith('http'):
+            link = 'https://' + link
+        if not link.endswith('/'):
+            link += '/'
         try:
             result = {
                 'title': r.find('h2').text,
-                'link': r.find("div", class_ ="b_attribution").text,
+                'link': link,
                 'source': 'bing.com',
                 'summary': r.find("p").text,
             }

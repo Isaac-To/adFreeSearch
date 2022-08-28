@@ -13,10 +13,14 @@ def googleResults(params):
         try:
             trackerLink = r.find("a", href=True)['href'][r.find("a", href=True)['href'].find('http'):]
             trackerLink = parse.unquote(trackerLink)
-            strippedLink = trackerLink[:trackerLink.find('&')]
+            link = trackerLink[:trackerLink.find('&')]
+            if not link.startswith('http'):
+                link = 'https://' + link
+            if not link.endswith('/'):
+                link += '/'
             result = {
                 'title': r.find("h3").text,
-                'link': strippedLink,
+                'link': link,
                 'source': 'google.com',
                 'summary': r.find("div", class_="BNeawe s3v9rd AP7Wnd").text,
             }
