@@ -42,7 +42,8 @@ def interlace(containsMultipleLists):
                 break
         else:
             break
-        newList.append(containsMultipleLists[j].pop(0))
+        if len(containsMultipleLists[j]) > 0:
+            newList.append(containsMultipleLists[j].pop(0))
         j+=1
     return newList
 
