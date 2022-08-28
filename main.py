@@ -13,7 +13,7 @@ from websources.wikipedia import wikipediaInSearch
 # images
 from websources.image_deviantArt import deviantArtResults
 # tools
-from websources.tools import resultsToHTML, imgResultsToHTML
+from websources.tools import resultsToHTML, imgResultsToHTML, relevancyByOccurances
 
 app = Flask(__name__)
 app.secret_key = uuid.uuid1().hex
@@ -92,16 +92,21 @@ def query_post():
     html = ''
     html += render_template('index.html', mode=session['mode'])
     if session.get('mode') == "search":
-        # wikipedia fetching
+        # fetching
         googleSearchResults = googleResults(params)
+        bingSearchResults = bingResults(params)
+        googleSearchResults.extend(bingSearchResults)
+        combinedSearchResults = relevancyByOccurances(googleSearchResults)
+        # widget fetching
+        definitionWidget = wordDefinition(params)
+        wikipediaResultWidget = wikipediaInSearch(combinedSearchResults)
         # layering
         html += '<div class="widgetContainer">'
-        html += wordDefinition(params)
-        html += wikipediaInSearch(googleSearchResults)
+        html += definitionWidget
+        html += wikipediaResultWidget
         html += '</div>'
         html += f'<br><h3 class="content">Showing results for {params["q"]}</h3>'
-        html += resultsToHTML(googleSearchResults)
-        html += resultsToHTML(bingResults(params))
+        html += resultsToHTML(combinedSearchResults)
     if session.get("mode") == "images":
         html += '<div class="content ">'
         html += imgResultsToHTML(deviantArtResults(params))

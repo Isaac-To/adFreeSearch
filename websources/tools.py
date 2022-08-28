@@ -29,3 +29,25 @@ def imgResultsToHTML(resultsDict):
     for r in resultsDict:
         outputHTML += render_template('imageResults.html', link = r['link'], source = r["source"])
     return outputHTML
+
+def relevancyByOccurances(listOfResults):
+    rankings = {}
+    for result in listOfResults:
+        if rankings.get(result.get('link')):
+            rankings[result.get('link')] += 1
+        else:
+            rankings[result.get('link')] = 1
+    rankedList = []
+    while len(rankings) > 0:
+        max = [0, '']
+        for link in rankings.keys():
+            if rankings[link] > max[0]:
+                max[0] = rankings[link]
+                max[1] = link
+        for result in listOfResults:
+            if result.get("link") == max[1]:
+                rankedList.append(result)
+                rankings.pop(result.get("link"))
+                break
+    return rankedList
+    
