@@ -92,14 +92,14 @@ def query_post():
     html += render_template('index.html', mode=session['mode'])
     if session.get('mode') == "search":
         # wikipedia fetching
-        searchResults = googleResults(params)
+        googleSearchResults = googleResults(params)
         # layering
         html += '<div class="widgetContainer">'
-        html += wordDefinition(params['q'])
-        html += wikipediaInSearch(searchResults)
+        html += wordDefinition(params)
+        html += wikipediaInSearch(googleSearchResults)
         html += '</div>'
         html += f'<br><h3 class="content">Showing results for {params["q"]}</h3>'
-        html += resultsToHTML(searchResults)
+        html += resultsToHTML(googleSearchResults)
     if session.get("mode") == "images":
         html += '<div class="content ">'
         html += imgResultsToHTML(deviantArtResults(params))

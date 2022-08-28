@@ -1,6 +1,8 @@
 from .tools import linkRequester
 from flask import render_template
-def wordDefinition(query):
+
+def wordDefinition(params):
+    query = params.get('q')
     if len(query.split(' ')) != 1:
         return ''
     link = f'https://www.merriam-webster.com/dictionary/{query}'
