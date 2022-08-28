@@ -34,21 +34,21 @@ def imgResultsToHTML(resultsDict):
 def relevancyByOccurances(listOfResults):
     rankings = {}
     for result in listOfResults:
-        if rankings.get(result.get('link')):
-            rankings[result.get('link')] += 1
+        if rankings.get(result.get('title')):
+            rankings[result.get('title')] += 1
         else:
-            rankings[result.get('link')] = 1
+            rankings[result.get('title')] = 1
     rankedList = []
     while len(rankings) > 0:
         max = [0, '']
-        for link in rankings.keys():
-            if rankings[link] > max[0]:
-                max[0] = rankings[link]
-                max[1] = link
+        for title in rankings.keys():
+            if rankings[title] > max[0]:
+                max[0] = rankings[title]
+                max[1] = title
         for result in listOfResults:
-            if result.get("link") == max[1]:
+            if result.get("title") == max[1]:
                 rankedList.append(result)
-                rankings.pop(result.get("link"))
+                rankings.pop(result.get("title"))
                 break
     return rankedList
     
