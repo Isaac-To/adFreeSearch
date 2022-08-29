@@ -6,7 +6,7 @@ async def wordDefinition(params):
     if len(query.split(' ')) != 1:
         return ''
     link = f'https://www.merriam-webster.com/dictionary/{query}'
-    soup = linkRequester(link)
+    soup = await linkRequester(link)
     try:
         text = (soup.find('span', class_ = 'dtText').get_text()) #type: ignore
         if text.startswith(':'):

@@ -5,14 +5,14 @@ from flask import render_template
 async def wikipediaInSearch(results):
     for res in results:
         if 'wikipedia.org' in res['link']:
-            return wikipediaPage(res['link'].split('/')[-2])
+            return await wikipediaPage(res['link'].split('/')[-2])
     return ''
 
 async def wikipediaPage(query):
     if query == None:
         return ''
     articleUrl = f'https://wikipedia.org/wiki/{query}'
-    soup = linkRequester(articleUrl)
+    soup = await linkRequester(articleUrl)
     if soup == None:
         return ""
     imgs = soup.find_all("img", src=True)  # type: ignore

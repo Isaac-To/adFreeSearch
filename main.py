@@ -109,7 +109,8 @@ async def query_post():
         html += f'<br><h3 class="content">Showing results for {params["q"]}</h3>'
         html += await resultsToHTML(combinedSearchResults)
     if session.get("mode") == "images":
-        html += await imgResultsToHTML(deviantArtResults(params))
+        deviantResults = await deviantArtResults(params)
+        html += await imgResultsToHTML(deviantResults)
     html += pgButtons
     html += "</div>"
     return html

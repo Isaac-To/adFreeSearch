@@ -4,7 +4,7 @@ from urllib import parse
 async def deviantArtResults(params):
     dvArtParams = params.copy()
     dvArtParams["page"] = params.get('start') / 10
-    soup = linkRequester(
+    soup = await linkRequester(
         f'https://www.deviantart.com/search/deviations?{parse.urlencode(dvArtParams)}')
     img_items = soup.find_all('a', href=True)
     results = []
