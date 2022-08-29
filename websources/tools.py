@@ -19,12 +19,12 @@ def randomAgent():
     return header
 
 def resultsToHTML(resultsDict):
-    outputHTML = "<div class='content'>"
+    outputHTML = ''
     for r in resultsDict:
         buildHTML = render_template(
             "singleResult.html", title=r['title'], link=r['link'], source=r["source"], summary=r["summary"])
         outputHTML += buildHTML
-    return outputHTML + "</div>"
+    return outputHTML
 
 def imgResultsToHTML(resultsDict):
     outputHTML = ""

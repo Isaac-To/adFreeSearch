@@ -91,6 +91,7 @@ def query_post():
     pgButtons += '</div>'
     html = ''
     html += render_template('index.html', mode=session['mode'])
+    html += '<div class="content ">'
     if session.get('mode') == "search":
         # fetching
         googleSearchResults = googleResults(params)
@@ -108,10 +109,9 @@ def query_post():
         html += f'<br><h3 class="content">Showing results for {params["q"]}</h3>'
         html += resultsToHTML(combinedSearchResults)
     if session.get("mode") == "images":
-        html += '<div class="content ">'
         html += imgResultsToHTML(deviantArtResults(params))
-        html += "</div>"
     html += pgButtons
+    html += "</div>"
     return html
 
 if __name__ == '__main__':
