@@ -37,6 +37,6 @@ This will only install the adfreesearch search engine to docker, allowing you to
 This can be done a couple different ways, but I reccomend using caddy which poses as a reverse proxy. Caddy will automatically generate a Let's Encrypt Certificate to apply TLS encryption to all outgoing traffic.
 
 2. Install Caddy on the host computer **OR** run Caddy on a docker network that can access the other image
-> caddy reverse-proxy --to 127.0.0.1:ADFREESEARCHPORT
-* replace ADFREESEARCHPORT with the port that you assigned to the adfreesearch container when you initialized it
+    > caddy reverse-proxy --to 127.0.0.1:ADFREESEARCHPORT
+    * replace ADFREESEARCHPORT with the port that you assigned to the adfreesearch container when you initialized it
 3. You should now be able to access the site from port **443** with HTTPS/TLS encryption enabled. You may notice that it is using a self signed certificate if you're accessing the site through an IP. Don't worry, once there is a domain name pointing to the server and you're accessing the site through that domain name, Caddy will **automatically** generate a Let's Encrypt Certificate and apply it.
