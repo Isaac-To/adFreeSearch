@@ -6,7 +6,7 @@ def wikipediaInSearch(results):
     for res in results:
         if 'wikipedia.org' in res['link']:
             return wikipediaPage(res['link'].split('/')[-2])
-    return wikis
+    return ''
 
 def wikipediaPage(query):
     if query == None:
