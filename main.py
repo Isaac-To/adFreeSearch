@@ -38,7 +38,7 @@ async def search():
     except:
         # by default, it should start at 0 unless denoted in the url
         session['start'] = 0
-    return query_post()
+    return await query_post()
 
 @app.route('/', methods=['POST'])
 @app.route('/s', methods=['POST'])
