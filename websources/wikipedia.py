@@ -2,13 +2,13 @@ from .tools import linkRequester
 from urllib import parse
 from flask import render_template
 
-def wikipediaInSearch(results):
+async def wikipediaInSearch(results):
     for res in results:
         if 'wikipedia.org' in res['link']:
             return wikipediaPage(res['link'].split('/')[-2])
     return ''
 
-def wikipediaPage(query):
+async def wikipediaPage(query):
     if query == None:
         return ''
     articleUrl = f'https://wikipedia.org/wiki/{query}'

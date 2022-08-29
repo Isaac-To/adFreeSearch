@@ -19,12 +19,12 @@ app = Flask(__name__)
 app.secret_key = uuid.uuid1().hex
 
 @app.route('/')
-def index():
+async def index():
     return f'<h1 class="brand-name">{parse.urlparse(request.url).hostname}</h1>' + render_template("index.html", mode='search')
 
 @app.route('/s')
 @app.route('/search')
-def search():
+async def search():
     # all queries made through the addr bar should be considered a search
     session['mode'] = 'search'
     urlparams = parse.parse_qs(parse.urlparse(request.url).query)
@@ -43,7 +43,7 @@ def search():
 @app.route('/', methods=['POST'])
 @app.route('/s', methods=['POST'])
 @app.route('/search', methods=['POST'])
-def query_post():
+async def query_post():
     session.permanent = True
     # if there is a new query from the search bar or an update from the page buttons
     if request.form.get('query') != None:
@@ -94,22 +94,22 @@ def query_post():
     html += '<div class="content ">'
     if session.get('mode') == "search":
         # fetching
-        googleSearchResults = googleResults(params)
-        bingSearchResults = bingResults(params)
-        interlacedResults = interlace([googleSearchResults, bingSearchResults])
-        combinedSearchResults = relevancyByOccurances(interlacedResults)
+        googleSearchResults = await googleResults(params)
+        bingSearchResults = await bingResults(params)
+        interlacedResults = await interlace([googleSearchResults, bingSearchResults])
+        combinedSearchResults = await relevancyByOccurances(interlacedResults)
         # widget fetching
         widgets = '<div class="widgetContainer">'
         if session.get('start') == 0 or session.get('start') == None:
-            widgets += wordDefinition(params)
-            widgets += wikipediaInSearch(combinedSearchResults)
+            widgets += await wordDefinition(params)
+            widgets += await wikipediaInSearch(combinedSearchResults)
         widgets += '</div>'
         # layering
         html += widgets
         html += f'<br><h3 class="content">Showing results for {params["q"]}</h3>'
-        html += resultsToHTML(combinedSearchResults)
+        html += await resultsToHTML(combinedSearchResults)
     if session.get("mode") == "images":
-        html += imgResultsToHTML(deviantArtResults(params))
+        html += await imgResultsToHTML(deviantArtResults(params))
     html += pgButtons
     html += "</div>"
     return html

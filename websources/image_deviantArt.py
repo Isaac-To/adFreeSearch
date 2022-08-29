@@ -1,7 +1,7 @@
 from .tools import linkRequester
 from urllib import parse
 
-def deviantArtResults(params):
+async def deviantArtResults(params):
     dvArtParams = params.copy()
     dvArtParams["page"] = params.get('start') / 10
     soup = linkRequester(

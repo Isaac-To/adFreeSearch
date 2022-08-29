@@ -1,11 +1,11 @@
 from .tools import linkRequester
 from urllib import parse
-def bingResults(params):
+async def bingResults(params):
     bingParams = params.copy()
     if params.get('start') != 0:
         bingParams['first'] = params.get("start") + 1
     del bingParams['start']
-    soup = linkRequester('https://bing.com/search?' + parse.urlencode(bingParams))
+    soup = await linkRequester('https://bing.com/search?' + parse.urlencode(bingParams))
     # return soup.prettify()
     # fP1Qef is the class used to represent each result for google
     ress = soup.find_all("li", class_="b_algo") #type: ignore

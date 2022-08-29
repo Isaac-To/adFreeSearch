@@ -1,7 +1,7 @@
 from .tools import linkRequester
 from flask import render_template
 
-def wordDefinition(params):
+async def wordDefinition(params):
     query = params.get('q')
     if len(query.split(' ')) != 1:
         return ''
