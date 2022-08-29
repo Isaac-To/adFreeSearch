@@ -99,7 +99,7 @@ def query_post():
         combinedSearchResults = relevancyByOccurances(interlacedResults)
         # widget fetching
         widgets = '<div class="widgetContainer">'
-        if session.get('start') == 0:
+        if session.get('start') == 0 or session.get('start') == None:
             widgets += wordDefinition(params)
             widgets += wikipediaInSearch(combinedSearchResults)
         widgets += '</div>'

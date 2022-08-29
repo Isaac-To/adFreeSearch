@@ -5,8 +5,8 @@ from flask import render_template
 def wikipediaInSearch(results):
     for res in results:
         if 'wikipedia.org' in res['link']:
-            return wikipediaPage(res['link'][res['link'].rfind('/') + 1:])
-    return ''
+            return wikipediaPage(res['link'].split('/')[-2])
+    return wikis
 
 def wikipediaPage(query):
     if query == None:
