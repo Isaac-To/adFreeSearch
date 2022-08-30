@@ -18,6 +18,9 @@ from websources.tools import resultsToHTML, imgResultsToHTML, relevancyByOccuran
 app = Flask(__name__)
 app.secret_key = uuid.uuid1().hex
 
+# no limit on caches for templates
+app.jinja_env.cache = {}
+
 @app.route('/')
 async def index():
     return f'<h1 class="brand-name">{parse.urlparse(request.url).hostname}</h1>' + render_template("index.html", mode='search')
