@@ -91,7 +91,7 @@ async def query_post():
     pgButtons += '</div>'
     html = ''
     html += render_template('index.html', mode=session['mode'])
-    html += '<div class="content ">'
+    html += '<div class="content">'
     if session.get('mode') == "search":
         # fetching
         googleSearchResults = await googleResults(params)

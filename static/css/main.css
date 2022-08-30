@@ -123,7 +123,7 @@ input[type="radio"]:checked+label:before {
     text-align: center;
 }
 
-.proxy-btn {
+.btn {
     color: gray;
     background-color: transparent;
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -133,22 +133,8 @@ input[type="radio"]:checked+label:before {
     transition: 0.2s ease-in-out;
 }
 
-.proxy-btn:hover {
+.btn:hover {
     background-color: rgba(0, 0, 0, 0.1);
-}
-
-.pg-btn {
-    width: fit-content;
-    padding: 0.5%;
-    background-color: white;
-    color: gray;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 24px;
-    transition: ease-in-out 0.2s;
-}
-
-.pg-btn:hover {
-    border: 1px solid #41A4D3;
 }
 
 .result-box {
@@ -162,8 +148,6 @@ input[type="radio"]:checked+label:before {
 .footer {
     margin-top: 5%;
     margin-bottom: 5%;
-    margin-left: 10%;
-    margin-right: 10%;
 }
 
 .img-content {
