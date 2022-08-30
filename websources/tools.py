@@ -9,7 +9,7 @@ async def linkRequester(url):
     req = requests.get(url, headers = await randomAgent())
     if req.status_code not in range(200, 299):
         # try again one more time
-        req = requests.get(url, headers = randomAgent())
+        req = requests.get(url, headers = await randomAgent())
     # print(req.status_code, url)
     return BeautifulSoup(req.text, "html.parser")
 
