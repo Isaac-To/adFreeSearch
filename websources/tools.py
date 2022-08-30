@@ -22,7 +22,7 @@ async def resultsToHTML(resultsDict):
     outputHTML = ''
     for r in resultsDict:
         buildHTML = render_template(
-            "singleResult.html", title=r['title'], link=r['link'], source=r["source"], summary=r["summary"])
+            "singleResult.html", title=parse.unquote(r['title']), link=parse.unquote(r['link']), source=parse.unquote(r["source"]), summary=parse.unquote(r["summary"]))
         outputHTML += buildHTML
     return outputHTML
 
