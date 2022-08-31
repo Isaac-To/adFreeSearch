@@ -10,7 +10,8 @@ async def wikipediaInSearch(results):
     :return: The first sentence of the wikipedia page.
     """
     for res in results:
-        if 'wikipedia.org' in res['link']:
+        hostname = str(parse.urlparse(res.get('link')).hostname)
+        if hostname.endswith('wikipedia.org'):
             return await wikipediaPage(res['link'].split('/')[-2])
     return ''
 
