@@ -2,6 +2,13 @@ from .tools import linkRequester
 from urllib import parse
 
 async def deviantArtResults(params):
+    """
+    It takes a dictionary of parameters, and returns a list of dictionaries containing the source and
+    link of the images found on the page
+    
+    :param params: A dictionary of parameters to be passed to the search engine
+    :return: A list of dictionaries.
+    """
     dvArtParams = params.copy()
     dvArtParams["page"] = params.get('start') / 10
     soup = await linkRequester(

@@ -3,12 +3,25 @@ from urllib import parse
 from flask import render_template
 
 async def wikipediaInSearch(results):
+    """
+    It takes a list of search results, and returns the first Wikipedia page it finds
+    
+    :param results: The results from the search
+    :return: The first sentence of the wikipedia page.
+    """
     for res in results:
         if 'wikipedia.org' in res['link']:
             return await wikipediaPage(res['link'].split('/')[-2])
     return ''
 
 async def wikipediaPage(query):
+    """
+    It takes a query, and returns a rendered template with the query's title, image, summary, and
+    article url.
+    
+    :param query: the query to search for
+    :return: The wikipedia page for the query.
+    """
     if query == None:
         return ''
     articleUrl = f'https://wikipedia.org/wiki/{query}'

@@ -23,11 +23,21 @@ app.jinja_env.cache = {}
 
 @app.route('/')
 async def index():
+    """
+    It returns a string that contains the hostname of the URL that the user is currently on, and then it
+    renders the index.html template
+    :return: The return value of the function is a string.
+    """
     return f'<h1 class="brand-name">{parse.urlparse(request.url).hostname}</h1>' + render_template("index.html", mode='search')
 
 @app.route('/s')
 @app.route('/search')
 async def search():
+    """
+    It takes the query from the url and sets it to the session variable 'q' and then calls the
+    query_post function
+    :return: The return value of the function is the return value of the last line of the function.
+    """
     # all queries made through the addr bar should be considered a search
     session['mode'] = 'search'
     urlparams = parse.parse_qs(parse.urlparse(request.url).query)
@@ -47,6 +57,10 @@ async def search():
 @app.route('/s', methods=['POST'])
 @app.route('/search', methods=['POST'])
 async def query_post():
+    """
+    It takes a query from the search bar, and returns a page with the results.
+    :return: The html of the page.
+    """
     session.permanent = True
     # if there is a new query from the search bar or an update from the page buttons
     if request.form.get('query') != None:

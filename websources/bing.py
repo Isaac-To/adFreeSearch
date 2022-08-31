@@ -1,6 +1,13 @@
 from .tools import linkRequester
 from urllib import parse
 async def bingResults(params):
+    """
+    It takes a dictionary of parameters, and returns a list of dictionaries, each of which represents a
+    search result from Bing
+    
+    :param params: a dictionary of parameters to be passed to the search engine
+    :return: A list of dictionaries.
+    """
     bingParams = params.copy()
     if params.get('start') != 0:
         bingParams['first'] = params.get("start") + 1

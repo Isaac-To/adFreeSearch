@@ -1,6 +1,13 @@
 from .tools import linkRequester
 from urllib import parse
 async def googleResults(params):
+    """
+    It takes a dictionary of parameters, and returns a list of dictionaries, each dictionary
+    representing a search result from Google
+    
+    :param params: a dictionary of parameters to be passed to the google search
+    :return: A list of dictionaries.
+    """
     googleParams = params.copy()
     if params.get('start') == 0:
         del googleParams['start']
