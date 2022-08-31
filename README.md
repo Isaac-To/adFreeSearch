@@ -30,7 +30,7 @@ A private, security oriented search engine
 This will only install the adfreesearch search engine to docker, allowing you to open the webpage without any encryption. **Only doing this much may be insecure as well as posing as a privacy risk if you intend on port forwarding the server to the internet.**
 
 1. Run this command in the terminal:
-    > docker run -d -p EXTERNAL_PORT:5000 isaact2/adfreesearch
+    > docker run -d -p EXTERNAL_PORT:5000 ghcr.io/isaac-to/adfreesearch:master
     * replace EXTERNAL_PORT with the port of your choosing.
 
 ### HTTPS/TLS encryption (Optional but highly reccomended)
