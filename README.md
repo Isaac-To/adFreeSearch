@@ -14,6 +14,7 @@ A private, security oriented search engine
 - [x] All interactions are made through POST requests
 - [x] A widget sidebar (shows up based on the queries featuring information from a variety of sources)
 - [x] Image search (only deviantart right now)
+- [x] Derives results from multiple search engines and ranks them
 
 ### To-Dos
 
@@ -22,7 +23,6 @@ A private, security oriented search engine
 - [ ] Add adjustable settings
 - [ ] Add video search
 - [ ] Possibly a maps function (likely through OSM - Open Street Maps)
-- [ ] Other sources other than just Google (Might end up like SearX but I don't want to make the search engine bloated and slow)
 
 ## How to run (Basic)
 *Prerequisite: Have Docker installed to your system*
