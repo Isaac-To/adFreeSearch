@@ -1,8 +1,14 @@
-# adFreeSearch
+# 1. adFreeSearch
 
 A private, security oriented search engine
 
-### Features
+- [1. adFreeSearch](#1-adfreesearch)
+  - [1.1. Features](#11-features)
+  - [1.2. To-Dos](#12-to-dos)
+  - [1.3. How to run (Basic)](#13-how-to-run-basic)
+    - [1.3.1. HTTPS/TLS encryption (Optional but highly reccomended)](#131-httpstls-encryption-optional-but-highly-reccomended)
+
+## 1.1. Features
 
 - [x] Self Hostable, you can build this on docker with the provided Docker files or just run it through the main.py file.
 - [x] Google link based tracker stripping
@@ -16,26 +22,28 @@ A private, security oriented search engine
 - [x] Image search (only deviantart right now)
 - [x] Derives results from multiple search engines and ranks them
 
-### To-Dos
+## 1.2. To-Dos
 
-- [ ] Dark Mode
-- [ ] Add more image sources
-- [ ] Add adjustable settings
-- [ ] Add video search
-- [ ] Possibly a maps function (likely through OSM - Open Street Maps)
+- Dark Mode
+- Add more image sources
+- Add adjustable settings
+- Add video search
+- Possibly a maps function (likely through OSM - Open Street Maps)
 
-## How to run (Basic)
+## 1.3. How to run (Basic)
 *Prerequisite: Have Docker installed to your system*
 
 1. Run this command in the terminal:
 
     This will only install the adfreesearch search engine to docker, allowing you to open the webpage without any encryption. **Only doing this much may be insecure as well as posing as a privacy risk if you intend on port forwarding the server to the internet.**
     
-    > docker run -d -p EXTERNAL_PORT:5000 ghcr.io/isaac-to/adfreesearch:master
+    ```
+    docker run -d -p EXTERNAL_PORT:5000 ghcr.io/isaac-to/adfreesearch:master
+    ```
     
     * replace EXTERNAL_PORT with the port of your choosing.
 
-### HTTPS/TLS encryption (Optional but highly reccomended)
+### 1.3.1. HTTPS/TLS encryption (Optional but highly reccomended)
 
 This can be done a couple different ways, but I reccomend using caddy which poses as a reverse proxy. Caddy will automatically generate a Let's Encrypt Certificate to apply TLS encryption to all outgoing traffic.
 
@@ -45,7 +53,9 @@ This can be done a couple different ways, but I reccomend using caddy which pose
     
     This will create a reverse proxy from your designated port in step 1 to port **443** the default SSL port.
 
-    > caddy reverse-proxy --to 127.0.0.1:ADFREESEARCHPORT
+    ```
+    caddy reverse-proxy --to 127.0.0.1:ADFREESEARCHPORT
+    ```
     * replace ADFREESEARCHPORT with the port that you assigned to the adfreesearch container when you initialized it
 
 4. You should now be able to access the site from port **443** with HTTPS/TLS encryption enabled. You may notice that it is using a self signed certificate if you're accessing the site through an IP. Don't worry, once there is a domain name pointing to the server and you're accessing the site through that domain name, Caddy will **automatically** generate a Let's Encrypt Certificate and apply it.
