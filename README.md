@@ -17,8 +17,6 @@ A private, security oriented search engine
 
 ### To-Dos
 
-- [ ] Add support for commonly used JS frameworks so sites don't simply break.
-- [ ] Add support for proxying pages past the initial page (dealing with link elements and possibly converting them into POST requests to be proxied and forwarded)
 - [ ] Dark Mode
 - [ ] Add more image sources
 - [ ] Add adjustable settings
