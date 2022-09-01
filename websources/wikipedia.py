@@ -29,12 +29,13 @@ async def wikipediaPage(query):
     soup = await linkRequester(articleUrl)
     if soup == None:
         return ""
-    imgs = soup.find_all("img", src=True)  # type: ignore
-    imageUrl = None
-    for img in imgs:
-        if query in img.get('src'):
-            imageUrl = img.get('src')
-            break
+    try:
+        infobox = soup.find('td', class_="infobox-image")
+        img = infobox.find('img', src=True) # type: ignore
+        imageUrl = img.get('src')  # type: ignore
+    except:
+        imageUrl = None
+
     links = soup.findAll("a", href=True)
     for link in links:
         if link.get('href').startswith('#cite'):
