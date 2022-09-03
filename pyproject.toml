@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "adfreesearch"
+version = "0.1.0"
+description = "A private, security oriented search engine"
+authors = ["No767 <73260931+No767@users.noreply.github.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+uvicorn = "^0.18.3"
+gunicorn = "^20.1.0"
+fake-useragent = "^0.1.11"
+Flask = {extras = ["async"], version = "^2.2.2"}
+aiohttp = "^3.8.1"
+cchardet = "^2.1.7"
+aiodns = "^3.0.0"
+orjson = "^3.8.0"
+Brotli = "^1.0.9"
+lxml = "^4.9.1"
+uvloop = "^0.16.0"
+beautifulsoup4 = "^4.11.1"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
