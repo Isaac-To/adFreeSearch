@@ -104,3 +104,12 @@ async def relevancyByOccurances(listOfResults):
                 rankedList[-1]['source'] = ', '.join(rankings.pop(result.get("link")))
                 break
     return rankedList
+
+def linkFormatter(link):
+    if not link.startswith('http'):
+        link = 'https://' + link
+    if link.endswith("..."):
+        link = link[:-3]
+    if not link.endswith('/'):
+        link += '/'
+    return link

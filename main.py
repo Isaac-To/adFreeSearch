@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, session, redirect
 from urllib import parse
-import requests
 import uuid
 
 # self wrote
@@ -8,6 +7,7 @@ import uuid
 # search
 from websources.google import googleResults
 from websources.bing import bingResults
+from websources.onesearch import onesearchResults
 from websources.merriamwebster import wordDefinition
 from websources.wikipedia import wikipediaInSearch
 # images
@@ -96,7 +96,8 @@ async def query_post():
         # fetching
         googleSearchResults = await googleResults(params)
         bingSearchResults = await bingResults(params)
-        interlacedResults = await interlace([googleSearchResults, bingSearchResults])
+        onesearchSearchResults = await onesearchResults(params)
+        interlacedResults = await interlace([googleSearchResults, bingSearchResults, onesearchSearchResults])
         combinedSearchResults = await relevancyByOccurances(interlacedResults)
         # widget fetching
         widgets = '<div class="widgetContainer">'
@@ -116,4 +117,5 @@ async def query_post():
     return html
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
+    # app.run()

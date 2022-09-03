@@ -1,4 +1,4 @@
-from .tools import linkRequester
+from .tools import linkRequester, linkFormatter
 from urllib import parse
 async def googleResults(params):
     """
@@ -21,10 +21,7 @@ async def googleResults(params):
             trackerLink = r.find("a", href=True)['href'][r.find("a", href=True)['href'].find('http'):]
             trackerLink = parse.unquote(trackerLink)
             link = trackerLink[:trackerLink.find('&')]
-            if not link.startswith('http'):
-                link = 'https://' + link
-            if not link.endswith('/'):
-                link += '/'
+            link = linkFormatter(link)
             result = {
                 'title': r.find("h3").text,
                 'link': link,

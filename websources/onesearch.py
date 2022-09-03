@@ -1,30 +1,33 @@
 from .tools import linkRequester, linkFormatter
 from urllib import parse
-async def bingResults(params):
+async def onesearchResults(params):
     """
     It takes a dictionary of parameters, and returns a list of dictionaries, each of which represents a
-    search result from Bing
+    search result from Onesearch
     
     :param params: a dictionary of parameters to be passed to the search engine
     :return: A list of dictionaries.
     """
-    bingParams = params.copy()
+    onesearchParams = params.copy()
     if params.get('start') != 0:
-        bingParams['first'] = params.get("start") + 1
-    del bingParams['start']
-    soup = await linkRequester('https://bing.com/search?' + parse.urlencode(bingParams))
+        onesearchParams['b'] = params.get("start") + 1
+    del onesearchParams['start']
+    soup = await linkRequester('https://www.onesearch.com/yhs/search?' + parse.urlencode(onesearchParams))
     # return soup.prettify()
-    ress = soup.find_all("li", class_="b_algo") #type: ignore
+    ress = soup.find_all("li") #type: ignore
     resultsDict = []
     for r in ress:
-        link = r.find("div", class_ ="b_attribution").text
+        try:
+            link = r.find("span", class_="fz-ms").text
+        except:
+            continue
         link = linkFormatter(link)
         try:
             result = {
-                'title': r.find('h2').text,
+                'title': r.find('h3', class_="title").text,
                 'link': link,
-                'source': 'bing.com',
-                'summary': r.find("p").text,
+                'source': 'onesearch.com',
+                'summary': r.find("p", class_="fz-ms").text,
             }
             resultsDict.append(result)
         except Exception as e:
