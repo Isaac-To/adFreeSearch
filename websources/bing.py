@@ -28,6 +28,5 @@ async def bingResults(params):
             }
             resultsDict.append(result)
         except Exception as e:
-            print(e)
             pass
     return resultsDict

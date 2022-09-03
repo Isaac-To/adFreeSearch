@@ -31,6 +31,5 @@ async def onesearchResults(params):
             }
             resultsDict.append(result)
         except Exception as e:
-            print(e)
             pass
     return resultsDict
