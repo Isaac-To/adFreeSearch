@@ -94,10 +94,12 @@ async def query_post():
     html += '<div class="content">'
     if session.get('mode') == "search":
         # fetching
-        googleSearchResults = await googleResults(params)
-        bingSearchResults = await bingResults(params)
-        onesearchSearchResults = await onesearchResults(params)
-        interlacedResults = await interlace([googleSearchResults, bingSearchResults, onesearchSearchResults])
+        individualResults = [
+            await googleResults(params),
+            await bingResults(params),
+            await onesearchResults(params),
+        ]
+        interlacedResults = await interlace(individualResults)
         combinedSearchResults = await relevancyByOccurances(interlacedResults)
         # widget fetching
         widgets = '<div class="widgetContainer">'
