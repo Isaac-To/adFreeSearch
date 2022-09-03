@@ -1,6 +1,8 @@
 from .tools import linkRequester
 from urllib import parse
 from flask import render_template
+import asyncio
+import uvloop
 
 async def wikipediaInSearch(results):
     """
@@ -14,6 +16,8 @@ async def wikipediaInSearch(results):
         if hostname.endswith('wikipedia.org'):
             return await wikipediaPage(res['link'].split('/')[-2])
     return ''
+
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 async def wikipediaPage(query):
     """
@@ -51,3 +55,5 @@ async def wikipediaPage(query):
     if "may refer to:" in fullSummary and len(fullSummary) < 200:
         return ''
     return render_template('wikipediaResults.html', title = parse.unquote(query).replace('_',' ').title(), imageUrl = imageUrl, summary = fullSummary, articleUrl = articleUrl)
+    
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())

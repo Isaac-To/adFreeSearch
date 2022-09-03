@@ -4,6 +4,8 @@ from flask import render_template
 from urllib import parse
 import aiohttp
 import orjson
+import asyncio
+import uvloop
 
 async def linkRequester(url):
     """
@@ -17,6 +19,8 @@ async def linkRequester(url):
         async with session.get(url, headers=headers) as r:
             data = await r.text()
             return BeautifulSoup(data, "lxml")
+        
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 async def randomAgent():
     """
@@ -26,6 +30,8 @@ async def randomAgent():
     ua = UserAgent()
     header = {'User-Agent': str(ua.random)}
     return header
+
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 async def resultsToHTML(resultsDict):
     """
@@ -41,6 +47,8 @@ async def resultsToHTML(resultsDict):
         outputHTML += buildHTML
     return outputHTML
 
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+
 async def imgResultsToHTML(resultsDict):
     """
     It takes a dictionary of image results and returns a string of HTML
@@ -52,6 +60,8 @@ async def imgResultsToHTML(resultsDict):
     for r in resultsDict:
         outputHTML += render_template('imageResults.html', link = r['link'], source = r["source"])
     return outputHTML
+
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 async def interlace(containsMultipleLists):
     """
@@ -75,6 +85,8 @@ async def interlace(containsMultipleLists):
             newList.append(containsMultipleLists[j].pop(0))
         j+=1
     return newList
+
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 async def relevancyByOccurances(listOfResults):
     """
@@ -103,6 +115,8 @@ async def relevancyByOccurances(listOfResults):
                 rankedList[-1]['source'] = ', '.join(rankings.pop(result.get("link")))
                 break
     return rankedList
+
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 def linkFormatter(link):
     if not link.startswith('http'):

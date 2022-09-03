@@ -1,5 +1,8 @@
 from .tools import linkRequester, linkFormatter
 from urllib import parse
+import asyncio
+import uvloop
+
 async def googleResults(params):
     """
     It takes a dictionary of parameters, and returns a list of dictionaries, each dictionary
@@ -32,3 +35,5 @@ async def googleResults(params):
         except Exception as e:
             pass
     return resultsDict
+
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())

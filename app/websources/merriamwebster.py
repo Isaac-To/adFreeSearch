@@ -1,5 +1,7 @@
 from .tools import linkRequester
 from flask import render_template
+import asyncio
+import uvloop
 
 async def wordDefinition(params):
     """
@@ -19,3 +21,5 @@ async def wordDefinition(params):
             return render_template('definition.html', title=query.title(), text=text[1:], source = link)
     except: pass
     return ''
+
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())

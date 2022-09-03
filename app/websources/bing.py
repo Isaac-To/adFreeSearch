@@ -1,5 +1,8 @@
 from .tools import linkRequester, linkFormatter
 from urllib import parse
+import asyncio
+import uvloop
+
 async def bingResults(params):
     """
     It takes a dictionary of parameters, and returns a list of dictionaries, each of which represents a
@@ -30,3 +33,5 @@ async def bingResults(params):
         except Exception as e:
             pass
     return resultsDict
+
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())

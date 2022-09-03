@@ -1,5 +1,8 @@
 from .tools import linkRequester, linkFormatter
 from urllib import parse
+import asyncio
+import uvloop
+
 async def onesearchResults(params):
     """
     It takes a dictionary of parameters, and returns a list of dictionaries, each of which represents a
@@ -33,3 +36,5 @@ async def onesearchResults(params):
         except Exception as e:
             pass
     return resultsDict
+
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())

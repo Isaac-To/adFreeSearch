@@ -1,5 +1,7 @@
 from .tools import linkRequester
 from urllib import parse
+import asyncio
+import uvloop
 
 async def deviantArtResults(params):
     """
@@ -22,3 +24,5 @@ async def deviantArtResults(params):
                 results.append({"source": img.get('src'),
                             "link": item.get('href')})
     return results
+
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
