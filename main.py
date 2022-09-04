@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, session, redirect
 from urllib import parse
 import uuid
+import asyncio
+import sys
 
 # self wrote
 # import adLists
@@ -13,13 +15,15 @@ from websources.wikipedia import wikipediaInSearch
 # images
 from websources.image_deviantArt import deviantArtResults
 # tools
-from websources.tools import resultsToHTML, imgResultsToHTML, relevancyByOccurances, randomAgent, interlace
+from websources.tools import resultsToHTML, imgResultsToHTML, relevancyByOccurances, interlace
 
+# app setup
 app = Flask(__name__)
 app.secret_key = uuid.uuid1().hex
 
 # no limit on caches for templates
 app.jinja_env.cache = {}
+
 
 @app.route('/')
 async def index():
@@ -29,6 +33,7 @@ async def index():
     :return: The return value of the function is a string.
     """
     return f'<h1 class="brand-name">{parse.urlparse(request.url).hostname}</h1>' + render_template("index.html", mode='search')
+
 
 @app.route('/s')
 @app.route('/search')
@@ -42,16 +47,17 @@ async def search():
     session['mode'] = 'search'
     urlparams = parse.parse_qs(parse.urlparse(request.url).query)
     try:
-        session['q'] = urlparams.get('q')[0] #type: ignore
+        session['q'] = urlparams.get('q')[0]  # type: ignore
     except Exception as e:
         # if there is no query
         return redirect('/')
     try:
-        session['start'] = urlparams.get('start')[0] # type: ignore
+        session['start'] = urlparams.get('start')[0]  # type: ignore
     except:
         # by default, it should start at 0 unless denoted in the url
         session['start'] = 0
     return await query_post()
+
 
 @app.route('/', methods=['POST'])
 @app.route('/s', methods=['POST'])
@@ -70,7 +76,7 @@ async def query_post():
         session['q'] = request.form.get('query')  # type: ignore
     elif request.form.get('pg-btn') != None:
         # page change button backend
-        session['start'] = int(request.form.get('pg-btn')) # type: ignore
+        session['start'] = int(request.form.get('pg-btn'))  # type: ignore
     params = dict()
     # incase errors
     try:
@@ -79,15 +85,20 @@ async def query_post():
             session['start'] = 0
             return redirect("/")
         params['q'] = session['q']
-    except: return(redirect('/'))
-    try: params['start'] = session["start"]
-    except: params["start"] = 0
+    except:
+        return (redirect('/'))
+    try:
+        params['start'] = session["start"]
+    except:
+        params["start"] = 0
     # change page buttons
     pgButtons = '<div class="footer">'
     if params['start'] >= 10:
-        pgButtons += render_template('pageChangeButtons.html', title = 'Previous Page', startResult=params['start'] - 10)
+        pgButtons += render_template('pageChangeButtons.html',
+                                     title='Previous Page', startResult=params['start'] - 10)
         pgButtons += f'Page {int(params["start"] / 10) + 1}'
-    pgButtons += render_template('pageChangeButtons.html', title = 'Next Page', startResult=params['start'] + 10)
+    pgButtons += render_template('pageChangeButtons.html',
+                                 title='Next Page', startResult=params['start'] + 10)
     pgButtons += '</div>'
     html = ''
     html += render_template('index.html', mode=session['mode'])
@@ -121,3 +132,6 @@ async def query_post():
 if __name__ == '__main__':
     # app.run(debug=True)
     app.run()
+    # asyncio
+    if sys.platform == 'win32':
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
