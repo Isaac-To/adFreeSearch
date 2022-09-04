@@ -1,8 +1,8 @@
-import requests
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 from flask import render_template
 from urllib import parse
+import aiohttp
 
 async def linkRequester(url):
     """
@@ -11,13 +11,9 @@ async def linkRequester(url):
     :param url: The URL to be scraped
     :return: A BeautifulSoup object
     """
-    # print(url)
-    req = requests.get(url, headers = await randomAgent())
-    if req.status_code not in range(200, 299):
-        # try again one more time
-        req = requests.get(url, headers = await randomAgent())
-    # print(req.status_code, url)
-    return BeautifulSoup(req.text, "html.parser")
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url, headers = await randomAgent()) as response:
+            return BeautifulSoup(await response.text(), "html.parser")
 
 async def randomAgent():
     """
