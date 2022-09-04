@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, session, redirect
 from urllib import parse
 import uuid
 import asyncio
-import sys
+from sys import platform
 
 # self wrote
 # import adLists
@@ -130,8 +130,11 @@ async def query_post():
     return html
 
 if __name__ == '__main__':
-    # app.run(debug=True)
-    app.run()
-    # asyncio
-    if sys.platform == 'win32':
-        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    if platform  == "linux":
+        import uvloop
+        # asyncio
+        asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+        # app.run(debug=True)
+        app.run()
+    else:
+        print('This program must be run on Linux or in a Linux container')
