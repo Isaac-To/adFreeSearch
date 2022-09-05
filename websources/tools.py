@@ -106,6 +106,6 @@ def linkFormatter(link):
         link = 'https://' + link
     if link.endswith("..."):
         link = link[:-3]
-    if not link.endswith('/'):
-        link += '/'
+    if link.endswith('/'):
+        link = link[:-1]
     return link

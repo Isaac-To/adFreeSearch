@@ -98,19 +98,22 @@ async def query_post():
     html += '<div class="content">'
     if session.get('mode') == "search":
         # fetching
-        resultsTasks = []
-        resultsTasks.append(asyncio.create_task(googleResults(params))) # type: ignore
-        resultsTasks.append(asyncio.create_task(bingResults(params))) # type: ignore
-        resultsTasks.append(asyncio.create_task(onesearchResults(params))) # type: ignore
+        resultsTasks = [
+            asyncio.create_task(googleResults(params)),
+            asyncio.create_task(bingResults(params)),
+            asyncio.create_task(onesearchResults(params))
+        ]
         # load independent widget sources
         widgetTasks = []
         widgetTasks.append(asyncio.create_task(wordDefinition(params)))
         # collect results
         results = await asyncio.gather(*resultsTasks)
         interlacedResults = await interlace(results)
-        combinedSearchResults = asyncio.create_task(relevancyByOccurances(interlacedResults)) # type: ignore
+        combinedSearchResults = asyncio.create_task(
+            relevancyByOccurances(interlacedResults))  # type: ignore
         # load dependent widget sources
-        widgetTasks.append(asyncio.create_task(wikipediaInSearch(interlacedResults)))
+        widgetTasks.append(asyncio.create_task(
+            wikipediaInSearch(interlacedResults)))
         # sort results
         combinedSearchResults = await combinedSearchResults
         # start assembling HTML for results
@@ -127,7 +130,7 @@ async def query_post():
     return html
 
 if __name__ == '__main__':
-    if platform  == "linux":
+    if platform == "linux":
         import uvloop
         # asyncio
         asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
