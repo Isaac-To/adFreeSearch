@@ -16,6 +16,7 @@ from websources.wikipedia import wikipediaInSearch
 from websources.image_deviantArt import deviantArtResults
 # tools
 from websources.tools import resultsToHTML, imgResultsToHTML, relevancyByOccurances, interlace
+from generator import generateWidgetBar, generateFooter
 
 # app setup
 app = Flask(__name__)
@@ -71,9 +72,8 @@ async def query_post():
     # if there is a new query from the search bar or an update from the page buttons
     if request.form.get('query') != None:
         session['mode'] = request.form.get("mode")
-        if session["mode"] == "":
-            session["mode"] = 'search'
-        session['q'] = request.form.get('query')  # type: ignore
+        session['start'] = 0
+        session['q'] = request.form.get('query')
     elif request.form.get('pg-btn') != None:
         # page change button backend
         session['start'] = int(request.form.get('pg-btn'))  # type: ignore
@@ -82,8 +82,8 @@ async def query_post():
     try:
         # incase there is no query
         if session["q"] == "":
-            session['start'] = 0
             return redirect("/")
+        # assigns the session query to the param to be subitted
         params['q'] = session['q']
     except:
         return (redirect('/'))
@@ -91,15 +91,8 @@ async def query_post():
         params['start'] = session["start"]
     except:
         params["start"] = 0
-    # change page buttons
-    pgButtons = '<div class="footer">'
-    if params['start'] >= 10:
-        pgButtons += render_template('pageChangeButtons.html',
-                                     title='Previous Page', startResult=params['start'] - 10)
-        pgButtons += f'Page {int(params["start"] / 10) + 1}'
-    pgButtons += render_template('pageChangeButtons.html',
-                                 title='Next Page', startResult=params['start'] + 10)
-    pgButtons += '</div>'
+    # start generating footer buttons
+    footer = asyncio.create_task(generateFooter(params['start']))
     html = ''
     html += render_template('index.html', mode=session['mode'])
     html += '<div class="content">'
@@ -110,30 +103,26 @@ async def query_post():
         resultsTasks.append(asyncio.create_task(bingResults(params))) # type: ignore
         resultsTasks.append(asyncio.create_task(onesearchResults(params))) # type: ignore
         # load independent widget sources
-        merriamWebsterResult = asyncio.create_task(wordDefinition(params))
+        widgetTasks = []
+        widgetTasks.append(asyncio.create_task(wordDefinition(params)))
         # collect results
         results = await asyncio.gather(*resultsTasks)
         interlacedResults = await interlace(results)
         combinedSearchResults = asyncio.create_task(relevancyByOccurances(interlacedResults)) # type: ignore
         # load dependent widget sources
-        wikipediaResult = asyncio.create_task(wikipediaInSearch(interlacedResults))
+        widgetTasks.append(asyncio.create_task(wikipediaInSearch(interlacedResults)))
         # sort results
         combinedSearchResults = await combinedSearchResults
         # start assembling HTML for results
         resultsHTML = asyncio.create_task(resultsToHTML(combinedSearchResults))
-        # widget construction
-        widgets = '<div class="widgetContainer">'
-        widgets += await wikipediaResult
-        widgets += await merriamWebsterResult
-        widgets += '</div>'
         # layering
-        html += widgets
+        html += await generateWidgetBar(await asyncio.gather(*widgetTasks))
         html += f'<br><h3 class="content">Showing results for {params["q"]}</h3>'
         html += await resultsHTML
     if session.get("mode") == "images":
         deviantResults = await deviantArtResults(params)
         html += await imgResultsToHTML(deviantResults)
-    html += pgButtons
+    html += await footer
     html += "</div>"
     return html
 
