@@ -109,19 +109,27 @@ async def query_post():
         resultsTasks.append(asyncio.create_task(googleResults(params))) # type: ignore
         resultsTasks.append(asyncio.create_task(bingResults(params))) # type: ignore
         resultsTasks.append(asyncio.create_task(onesearchResults(params))) # type: ignore
+        # load independent widget sources
+        merriamWebsterResult = asyncio.create_task(wordDefinition(params))
+        # collect results
         results = await asyncio.gather(*resultsTasks)
         interlacedResults = await interlace(results)
-        combinedSearchResults = await relevancyByOccurances(interlacedResults)
-        # widget fetching
+        combinedSearchResults = asyncio.create_task(relevancyByOccurances(interlacedResults)) # type: ignore
+        # load dependent widget sources
+        wikipediaResult = asyncio.create_task(wikipediaInSearch(interlacedResults))
+        # sort results
+        combinedSearchResults = await combinedSearchResults
+        # start assembling HTML for results
+        resultsHTML = asyncio.create_task(resultsToHTML(combinedSearchResults))
+        # widget construction
         widgets = '<div class="widgetContainer">'
-        if session.get('start') == 0 or session.get('start') == None:
-            widgets += await wordDefinition(params)
-            widgets += await wikipediaInSearch(combinedSearchResults)
+        widgets += await wikipediaResult
+        widgets += await merriamWebsterResult
         widgets += '</div>'
         # layering
         html += widgets
         html += f'<br><h3 class="content">Showing results for {params["q"]}</h3>'
-        html += await resultsToHTML(combinedSearchResults)
+        html += await resultsHTML
     if session.get("mode") == "images":
         deviantResults = await deviantArtResults(params)
         html += await imgResultsToHTML(deviantResults)
