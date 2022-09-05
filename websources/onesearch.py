@@ -4,6 +4,13 @@ from urllib import parse
 import asyncio
 
 async def buildResults(rawResult):
+    """
+    It takes a raw result from the search engine, and returns a dictionary with the title, link, source,
+    and summary of the result
+    
+    :param rawResult: The raw result from the search engine
+    :return: A dictionary with the title, link, source, and summary of the search result.
+    """
     try:
         link = rawResult.find("span", class_="fz-ms").text
         link = linkFormatter(link)
