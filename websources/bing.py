@@ -1,5 +1,27 @@
 from .tools import linkRequester, linkFormatter
 from urllib import parse
+import asyncio
+
+async def buildResults(rawResult):
+    """
+    It takes the raw result from the search engine, and formats it into a dictionary
+    
+    :param rawResult: The raw result from the HTML page
+    :return: A dictionary with the title, link, source, and summary of the search result.
+    """
+    try:
+        link = rawResult.find("div", class_ ="b_attribution").text
+        link = linkFormatter(link)
+        result = {
+            'title': rawResult.find('h2').text,
+            'link': link,
+            'source': 'bing.com',
+            'summary': rawResult.find("p").text,
+        }
+        return result
+    except:
+        return None
+
 async def bingResults(params):
     """
     It takes a dictionary of parameters, and returns a list of dictionaries, each of which represents a
@@ -15,18 +37,7 @@ async def bingResults(params):
     soup = await linkRequester('https://bing.com/search?' + parse.urlencode(bingParams))
     # return soup.prettify()
     ress = soup.find_all("li", class_="b_algo") #type: ignore
-    resultsDict = []
+    resultsTask = []
     for r in ress:
-        link = r.find("div", class_ ="b_attribution").text
-        link = linkFormatter(link)
-        try:
-            result = {
-                'title': r.find('h2').text,
-                'link': link,
-                'source': 'bing.com',
-                'summary': r.find("p").text,
-            }
-            resultsDict.append(result)
-        except Exception as e:
-            pass
-    return resultsDict
+        resultsTask.append(asyncio.create_task(buildResults(r))) # type: ignore
+    return [i for i in await asyncio.gather(*resultsTask) if i is not None]

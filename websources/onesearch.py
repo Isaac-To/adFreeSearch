@@ -1,5 +1,22 @@
+from distutils.command.build import build
 from .tools import linkRequester, linkFormatter
 from urllib import parse
+import asyncio
+
+async def buildResults(rawResult):
+    try:
+        link = rawResult.find("span", class_="fz-ms").text
+        link = linkFormatter(link)
+        result = {
+            'title': rawResult.find('h3', class_="title").text,
+            'link': link,
+            'source': 'onesearch.com',
+            'summary': rawResult.find("p", class_="fz-ms").text,
+        }
+        return result
+    except:
+        return None
+
 async def onesearchResults(params):
     """
     It takes a dictionary of parameters, and returns a list of dictionaries, each of which represents a
@@ -15,21 +32,7 @@ async def onesearchResults(params):
     soup = await linkRequester('https://www.onesearch.com/yhs/search?' + parse.urlencode(onesearchParams))
     # return soup.prettify()
     ress = soup.find_all("li") #type: ignore
-    resultsDict = []
+    resultsTask = []
     for r in ress:
-        try:
-            link = r.find("span", class_="fz-ms").text
-        except:
-            continue
-        link = linkFormatter(link)
-        try:
-            result = {
-                'title': r.find('h3', class_="title").text,
-                'link': link,
-                'source': 'onesearch.com',
-                'summary': r.find("p", class_="fz-ms").text,
-            }
-            resultsDict.append(result)
-        except Exception as e:
-            pass
-    return resultsDict
+        resultsTask.append(asyncio.create_task(buildResults(r))) # type: ignore
+    return [i for i in await asyncio.gather(*resultsTask) if i is not None]

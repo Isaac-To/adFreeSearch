@@ -105,12 +105,12 @@ async def query_post():
     html += '<div class="content">'
     if session.get('mode') == "search":
         # fetching
-        individualResults = [
-            await googleResults(params),
-            await bingResults(params),
-            await onesearchResults(params),
-        ]
-        interlacedResults = await interlace(individualResults)
+        resultsTasks = []
+        resultsTasks.append(asyncio.create_task(googleResults(params))) # type: ignore
+        resultsTasks.append(asyncio.create_task(bingResults(params))) # type: ignore
+        resultsTasks.append(asyncio.create_task(onesearchResults(params))) # type: ignore
+        results = await asyncio.gather(*resultsTasks)
+        interlacedResults = await interlace(results)
         combinedSearchResults = await relevancyByOccurances(interlacedResults)
         # widget fetching
         widgets = '<div class="widgetContainer">'
