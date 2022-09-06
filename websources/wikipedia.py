@@ -16,6 +16,12 @@ async def wikipediaInSearch(results):
     return ''
 
 async def wikipediaPage(link):
+    """
+    It takes a wikipedia link, and returns a template with the title, image, summary, and link.
+    
+    :param link: the link to the wikipedia page
+    :return: The wikipedia page
+    """
     if link == None:
         return ''
     soup = await linkRequester(link)
