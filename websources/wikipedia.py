@@ -33,7 +33,7 @@ async def wikipediaPage(link):
         imageUrl = img.get('src')  # type: ignore
     except:
         imageUrl = None
-    articleTitle = soup.find('span', class_="mw-page-title-main").text # type: ignore
+    articleTitle = soup.find("h1").text # type: ignore
     links = soup.findAll("a", href=True)
     for link in links:
         if link.get('href').startswith('#cite'):

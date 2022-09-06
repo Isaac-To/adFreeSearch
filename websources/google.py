@@ -14,11 +14,11 @@ async def buildResult(rawResult):
         trackerLink = rawResult.find("a", href=True)['href'][rawResult.find("a", href=True)['href'].find('http'):]
         trackerLink = parse.unquote(trackerLink)
         link = trackerLink[:trackerLink.find('&')]
-        link = linkFormatter(link)
+        link = await linkFormatter(link)
         result = {
             'title': rawResult.find("h3").text,
             'link': link,
-            'source': 'google.com',
+            'source': ['google.com'],
             'summary': rawResult.find("div", class_="BNeawe s3v9rd AP7Wnd").text,
         }
         return result

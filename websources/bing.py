@@ -11,11 +11,11 @@ async def buildResults(rawResult):
     """
     try:
         link = rawResult.find("div", class_ ="b_attribution").text
-        link = linkFormatter(link)
+        link = await linkFormatter(link)
         result = {
             'title': rawResult.find('h2').text,
             'link': link,
-            'source': 'bing.com',
+            'source': ['bing.com'],
             'summary': rawResult.find("p").text,
         }
         return result

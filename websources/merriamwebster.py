@@ -9,8 +9,6 @@ async def wordDefinition(params):
     :return: The definition of the word.
     """
     query = params.get('q')
-    if len(query.split(' ')) != 1:
-        return ''
     link = f'https://www.merriam-webster.com/dictionary/{query}'
     soup = await linkRequester(link)
     try:

@@ -107,15 +107,20 @@ async def query_post():
         ]
         # load independent widget sources
         widgetTasks = []
-        widgetTasks.append(asyncio.create_task(wordDefinition(params)))
+        widgetCriteria = len(str(params.get('q')).split(' ')) < 3
+        # check if criteria to run widget is met
+        if widgetCriteria:
+            widgetTasks.append(asyncio.create_task(wordDefinition(params)))
         # collect results
         results = await asyncio.gather(*resultsTasks)
         interlacedResults = await interlace(results)
         combinedSearchResults = asyncio.create_task(
             relevancyByOccurances(interlacedResults))  # type: ignore
         # load dependent widget sources
-        widgetTasks.append(asyncio.create_task(
-            wikipediaInSearch(interlacedResults)))
+        # check if criteria to run widget is met
+        if widgetCriteria:
+            widgetTasks.append(asyncio.create_task(
+                wikipediaInSearch(interlacedResults)))
         # sort results
         combinedSearchResults = await combinedSearchResults
         # start assembling HTML for results
@@ -129,7 +134,7 @@ async def query_post():
         html += await imgResultsToHTML(deviantResults)
     html += await footer
     html += "</div>"
-    print(round(time() - acceptedTime, 5))
+    print(f"Resolved in {round(time() - acceptedTime, 5)}s")
     return html
 
 if __name__ == '__main__':

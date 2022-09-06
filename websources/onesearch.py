@@ -13,11 +13,11 @@ async def buildResults(rawResult):
     """
     try:
         link = rawResult.find("span", class_="fz-ms").text
-        link = linkFormatter(link)
+        link = await linkFormatter(link)
         result = {
             'title': rawResult.find('h3', class_="title").text,
             'link': link,
-            'source': 'onesearch.com',
+            'source': ['onesearch.com'],
             'summary': rawResult.find("p", class_="fz-ms").text,
         }
         return result

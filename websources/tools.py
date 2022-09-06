@@ -3,7 +3,7 @@ from fake_useragent import UserAgent
 from flask import render_template
 from urllib import parse
 import aiohttp
-
+from time import time
 async def linkRequester(url):
     """
     It takes a URL, makes a request to that URL, and returns the HTML of the page
@@ -11,8 +11,10 @@ async def linkRequester(url):
     :param url: The URL to be scraped
     :return: A BeautifulSoup object
     """
+    startTime = time()
     async with aiohttp.ClientSession() as session:
         async with session.get(url, headers = await randomAgent()) as response:
+            print(f"Response from {parse.urlparse(url).hostname} in {round(time() - startTime, 5)}s")
             return BeautifulSoup(await response.text(), "html.parser")
 
 async def randomAgent():
@@ -34,7 +36,7 @@ async def resultsToHTML(resultsDict):
     outputHTML = ''
     for r in resultsDict:
         buildHTML = render_template(
-            "singleResult.html", title=parse.unquote(r['title']), link=parse.unquote(r['link']), source=parse.unquote(r["source"]), summary=parse.unquote(r["summary"]))
+            "singleResult.html", title=parse.unquote(r['title']), link=parse.unquote(r['link']), source=', '.join(r["source"]), summary=parse.unquote(r["summary"]))
         outputHTML += buildHTML
     return outputHTML
 
@@ -84,9 +86,9 @@ async def relevancyByOccurances(listOfResults):
     rankings = {}
     for result in listOfResults:
         if rankings.get(result.get('link')):
-            rankings[result.get('link')].append(result.get('source'))
+            rankings[result.get('link')].extend(result.get('source'))
         else:
-            rankings[result.get('link')] = [result.get("source")]
+            rankings[result.get('link')] = result.get("source")
     rankedList = []
     while len(rankings) > 0:
         max = [0, '']
@@ -97,11 +99,11 @@ async def relevancyByOccurances(listOfResults):
         for result in listOfResults:
             if result.get("link") == max[1]:
                 rankedList.append(result)
-                rankedList[-1]['source'] = ', '.join(rankings.pop(result.get("link")))
+                rankedList[-1]['source'] = rankings.pop(result.get("link"))
                 break
     return rankedList
-
-def linkFormatter(link):
+    
+async def linkFormatter(link):
     if not link.startswith('http'):
         link = 'https://' + link
     if link.endswith("..."):
