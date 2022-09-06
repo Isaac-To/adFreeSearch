@@ -3,6 +3,7 @@ from urllib import parse
 import uuid
 import asyncio
 from sys import platform
+from time import time
 
 # self wrote
 # import adLists
@@ -68,6 +69,7 @@ async def query_post():
     It takes a query from the search bar, and returns a page with the results.
     :return: The html of the page.
     """
+    acceptedTime = time()
     session.permanent = True
     # if there is a new query from the search bar or an update from the page buttons
     if request.form.get('query') != None:
@@ -120,13 +122,14 @@ async def query_post():
         resultsHTML = asyncio.create_task(resultsToHTML(combinedSearchResults))
         # layering
         html += await generateWidgetBar(await asyncio.gather(*widgetTasks))
-        html += f'<br><h3 class="content">Showing results for {params["q"]}</h3>'
+        html += f'<br><h3 class="queryInfo">Showing results for <i>{params["q"]}</i></h3>'
         html += await resultsHTML
     if session.get("mode") == "images":
         deviantResults = await deviantArtResults(params)
         html += await imgResultsToHTML(deviantResults)
     html += await footer
     html += "</div>"
+    print(round(time() - acceptedTime, 5))
     return html
 
 if __name__ == '__main__':

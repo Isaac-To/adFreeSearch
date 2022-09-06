@@ -12,21 +12,13 @@ async def wikipediaInSearch(results):
     for res in results:
         hostname = str(parse.urlparse(res.get('link')).hostname)
         if hostname.endswith('wikipedia.org'):
-            return await wikipediaPage(res['link'].split('/')[-2])
+            return await wikipediaPage(res.get('link'))
     return ''
 
-async def wikipediaPage(query):
-    """
-    It takes a query, and returns a rendered template with the query's title, image, summary, and
-    article url.
-    
-    :param query: the query to search for
-    :return: The wikipedia page for the query.
-    """
-    if query == None:
+async def wikipediaPage(link):
+    if link == None:
         return ''
-    articleUrl = f'https://wikipedia.org/wiki/{query}'
-    soup = await linkRequester(articleUrl)
+    soup = await linkRequester(link)
     if soup == None:
         return ""
     try:
@@ -35,7 +27,7 @@ async def wikipediaPage(query):
         imageUrl = img.get('src')  # type: ignore
     except:
         imageUrl = None
-
+    articleTitle = soup.find('span', class_="mw-page-title-main").text # type: ignore
     links = soup.findAll("a", href=True)
     for link in links:
         if link.get('href').startswith('#cite'):
@@ -50,4 +42,4 @@ async def wikipediaPage(query):
             break
     if "may refer to:" in fullSummary and len(fullSummary) < 200:
         return ''
-    return render_template('wikipediaResults.html', title = parse.unquote(query).replace('_',' ').title(), imageUrl = imageUrl, summary = fullSummary, articleUrl = articleUrl)
+    return render_template('wikipediaResults.html', title = articleTitle, imageUrl = imageUrl, summary = fullSummary, articleUrl = link)
