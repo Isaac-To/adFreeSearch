@@ -114,7 +114,7 @@ async def query_post():
         # collect results
         results = await asyncio.gather(*resultsTasks)
         interlacedResults = await interlace(results)
-        combinedSearchResultsTask = asyncio.create_task(
+        combinedSearchResults = asyncio.create_task(
             relevancyByOccurances(interlacedResults))  # type: ignore
         # load dependent widget sources
         # check if criteria to run widget is met
@@ -122,7 +122,7 @@ async def query_post():
             widgetTasks.append(asyncio.create_task(
                 wikipediaInSearch(interlacedResults)))
         # sort results
-        combinedSearchResults = await combinedSearchResultsTask
+        combinedSearchResults = await combinedSearchResults
         # start assembling HTML for results
         resultsHTML = asyncio.create_task(resultsToHTML(combinedSearchResults))
         # layering
