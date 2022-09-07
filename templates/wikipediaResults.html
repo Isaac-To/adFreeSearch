@@ -1,9 +1,11 @@
 <br>
 <span class="card">
     <h3 card="card-title">{{ title }}</h3>
-    {% if imageUrl != None %}
-    <img class="card-img" src="{{ imageUrl }}">
-    {% endif %}
-    <p card="card-text">{{ summary }}</p>
+    <div class="card-content">
+        {% if imageUrl != None %}
+        <img class="card-img" src="{{ imageUrl }}">
+        {% endif %}
+        <p card="card-text">{{ summary }}</p>
+    </div>
     <a href="{{ articleUrl }}">Source: Wikipedia</a>
 </span>
