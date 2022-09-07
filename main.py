@@ -97,6 +97,7 @@ async def query_post():
     footer = asyncio.create_task(generateFooter(params['start']))
     html = ''
     html += render_template('index.html', mode=session['mode'])
+    html += '<div class="displaySpace">'
     html += '<div class="content">'
     if session.get('mode') == "search":
         # fetching
@@ -126,14 +127,14 @@ async def query_post():
         # start assembling HTML for results
         resultsHTML = asyncio.create_task(resultsToHTML(combinedSearchResults))
         # layering
-        html += await generateWidgetBar(await asyncio.gather(*widgetTasks))
         html += f'<br><h3 class="queryInfo">Showing results for <i>{params["q"]}</i></h3>'
+        html += await generateWidgetBar(await asyncio.gather(*widgetTasks))
         html += await resultsHTML
     if session.get("mode") == "images":
         deviantResults = await deviantArtResults(params)
         html += await imgResultsToHTML(deviantResults)
     html += await footer
-    html += "</div>"
+    html += "</div></div>"
     print(f"Resolved in {round(time() - acceptedTime, 5)}s")
     return html
 
