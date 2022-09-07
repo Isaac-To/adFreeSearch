@@ -1,10 +1,8 @@
-/Pipfile
-/Pipfile.lock
-filterLists.txt
-__pycache__/adLists.cpython-39.pyc
+__pycache__/generator.cpython-39.pyc
+websources/__pycache__/bing.cpython-39.pyc
 websources/__pycache__/google.cpython-39.pyc
+websources/__pycache__/image_deviantArt.cpython-39.pyc
 websources/__pycache__/merriamwebster.cpython-39.pyc
+websources/__pycache__/onesearch.cpython-39.pyc
 websources/__pycache__/tools.cpython-39.pyc
 websources/__pycache__/wikipedia.cpython-39.pyc
-websources/__pycache__/bing.cpython-39.pyc
-websources/__pycache__/image_deviantArt.cpython-39.pyc

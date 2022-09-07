@@ -145,4 +145,6 @@ if __name__ == '__main__':
         # app.run(debug=True)
         app.run()
     else:
-        print('This program must be run on Linux or in a Linux container')
+        print('This is running without UVLoop, expect slower performance')
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+        app.run()
