@@ -11,7 +11,7 @@ async def wikipediaInSearch(results):
     """
     for res in results:
         hostname = str(parse.urlparse(res.get('link')).hostname)
-        if hostname.endswith('wikipedia.org'):
+        if hostname and hostname.endswith('.wikipedia.org'):
             return await wikipediaPage(res.get('link'))
     return ''
 
