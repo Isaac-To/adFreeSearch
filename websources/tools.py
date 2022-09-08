@@ -13,20 +13,21 @@ async def linkRequester(url):
     :param url: The URL to be scraped
     :return: A BeautifulSoup object
     """
+    async def randomAgent():
+        """
+        It returns a random user agent from the user_agents library
+        :return: A dictionary with a key of User-Agent and a value of a random user agent.
+        """
+        ua = UserAgent()
+        header = {'User-Agent': str(ua.random)}
+        return header
+    
     startTime = time()
     async with aiohttp.ClientSession() as session:
         async with session.get(url, headers = await randomAgent()) as response:
             print(f"Response from {parse.urlparse(url).hostname} in {round(time() - startTime, 5)}s")
             return BeautifulSoup(await response.text(), "html.parser")
 
-async def randomAgent():
-    """
-    It returns a random user agent from the user_agents library
-    :return: A dictionary with a key of User-Agent and a value of a random user agent.
-    """
-    ua = UserAgent()
-    header = {'User-Agent': str(ua.random)}
-    return header
 
 async def resultsToHTML(resultsDict):
     """
@@ -77,25 +78,6 @@ async def interlace(containsMultipleLists):
         j+=1
     return newList
 
-async def merge(a, b):
-    c = []
-    while len(a) != 0 and len(b) != 0:
-        if len(a[0].get('source')) > len(b[0].get('source')):
-            c.append(a.pop(0))
-        else:
-            c.append(b.pop(0))
-    while len(a) != 0:
-        c.append(a.pop(0))
-    while len(b) != 0:
-        c.append(b.pop(0))
-    return c
-
-async def msort(c):
-    if len(c) > 1:
-        aTask = asyncio.create_task(msort(c[:int(len(c) / 2)]))
-        bTask = asyncio.create_task(msort(c[int(len(c) / 2):]))
-        return await merge(await aTask, await bTask)
-    else: return c
 
 async def relevancyByOccurances(listOfResults):
     """
@@ -106,6 +88,41 @@ async def relevancyByOccurances(listOfResults):
     :return: A list of dictionaries.
     """
     # combines the results if they have the same link
+    async def merge(a, b):
+        """
+        It takes two lists of dictionaries, and returns a list of dictionaries that is sorted by the length
+        of the 'source' key
+        
+        :param a: The first list to be merged
+        :param b: The list of dictionaries to be sorted
+        :return: a list of dictionaries.
+        """
+        c = []
+        while len(a) != 0 and len(b) != 0:
+            if len(a[0].get('source')) > len(b[0].get('source')):
+                c.append(a.pop(0))
+            else:
+                c.append(b.pop(0))
+        while len(a) != 0:
+            c.append(a.pop(0))
+        while len(b) != 0:
+            c.append(b.pop(0))
+        return c
+
+    async def msort(c):
+        """
+        It takes a list of numbers, splits it in half, sorts each half, and then merges the two sorted
+        halves
+        
+        :param c: The list to be sorted
+        :return: The result of the merge function.
+        """
+        if len(c) > 1:
+            aTask = asyncio.create_task(msort(c[:int(len(c) / 2)]))
+            bTask = asyncio.create_task(msort(c[int(len(c) / 2):]))
+            return await merge(await aTask, await bTask)
+        else: return c
+
     for i in range(len(listOfResults)):
         offset = 0
         for j in range(i + 1, len(listOfResults)):
