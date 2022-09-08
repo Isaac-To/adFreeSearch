@@ -28,8 +28,8 @@ async def linkRequester(url):
                 return BeautifulSoup(await response.text(), "html.parser")
         
     startTime = time()
-    # timeout in 1.5 seconds
-    reqTask = asyncio.wait_for(request(url), timeout=1.5)
+    # timeout in 3 seconds
+    reqTask = asyncio.wait_for(request(url), timeout=3)
     host = parse.urlparse(url).hostname
     try:
         req = await reqTask
