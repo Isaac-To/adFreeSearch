@@ -4,6 +4,8 @@ from flask import render_template
 from urllib import parse
 import aiohttp
 from time import time
+import asyncio
+
 async def linkRequester(url):
     """
     It takes a URL, makes a request to that URL, and returns the HTML of the page
@@ -75,6 +77,26 @@ async def interlace(containsMultipleLists):
         j+=1
     return newList
 
+async def merge(a, b):
+    c = []
+    while len(a) != 0 and len(b) != 0:
+        if len(a[0].get('source')) > len(b[0].get('source')):
+            c.append(a.pop(0))
+        else:
+            c.append(b.pop(0))
+    while len(a) != 0:
+        c.append(a.pop(0))
+    while len(b) != 0:
+        c.append(b.pop(0))
+    return c
+
+async def msort(c):
+    if len(c) > 1:
+        aTask = asyncio.create_task(msort(c[:int(len(c) / 2)]))
+        bTask = asyncio.create_task(msort(c[int(len(c) / 2):]))
+        return await merge(await aTask, await bTask)
+    else: return c
+
 async def relevancyByOccurances(listOfResults):
     """
     It takes a list of results, and returns a list of results, but with the results sorted by how many
@@ -83,25 +105,19 @@ async def relevancyByOccurances(listOfResults):
     :param listOfResults: A list of dictionaries, each dictionary containing the following keys:
     :return: A list of dictionaries.
     """
-    rankings = {}
-    for result in listOfResults:
-        if rankings.get(result.get('link')):
-            rankings[result.get('link')].extend(result.get('source'))
-        else:
-            rankings[result.get('link')] = result.get("source")
-    rankedList = []
-    while len(rankings) > 0:
-        max = [0, '']
-        for link in rankings.keys():
-            if len(rankings[link]) > max[0]:
-                max[0] = len(rankings[link])
-                max[1] = link
-        for result in listOfResults:
-            if result.get("link") == max[1]:
-                rankedList.append(result)
-                rankedList[-1]['source'] = rankings.pop(result.get("link"))
-                break
-    return rankedList
+    # combines the results if they have the same link
+    for i in range(len(listOfResults)):
+        offset = 0
+        for j in range(i + 1, len(listOfResults)):
+            if listOfResults[i].get('link') == listOfResults[j - offset].get("link") and listOfResults[j - offset]['source'] is not None:
+                # only append if not already in the list
+                for source in listOfResults[j - offset].get("source"):
+                    if source not in listOfResults[i]['source']:
+                        listOfResults[i]['source'].append(source)
+                # removes the entry in the list
+                listOfResults.pop(j - offset)
+                offset += 1
+    return await msort(listOfResults)
     
 async def linkFormatter(link):
     if not link.startswith('http'):
