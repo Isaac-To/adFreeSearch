@@ -16,11 +16,10 @@ async def buildResults(rawResult):
             'title': rawResult.find('span', class_ = "snippet-title").text,
             'link': link,
             'source': ['brave.com'],
-            'summary': rawResult.find("p", class_ = "snippet-description").text,
+            'summary': rawResult.find("p").text,
         }
         return result
     except Exception as e:
-        print(e)
         return None
 
 async def braveResults(params):
