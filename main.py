@@ -108,7 +108,7 @@ async def query_post():
         ]
         # load independent widget sources
         widgetTasks = []
-        widgetCriteria = len(str(params.get('q')).split(' ')) < 3
+        widgetCriteria = len(str(params.get('q')).split(' ')) < 3 and params.get('start') == 0
         # check if criteria to run widget is met
         if widgetCriteria:
             widgetTasks.append(asyncio.create_task(wordDefinition(params)))
