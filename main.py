@@ -11,6 +11,7 @@ from time import time
 from websources.google import googleResults
 from websources.bing import bingResults
 from websources.onesearch import onesearchResults
+from websources.brave import braveResults
 from websources.merriamwebster import wordDefinition
 from websources.wikipedia import wikipediaInSearch
 # images
@@ -104,7 +105,8 @@ async def query_post():
         resultsTasks = [
             asyncio.create_task(googleResults(params)),
             asyncio.create_task(bingResults(params)),
-            asyncio.create_task(onesearchResults(params))
+            asyncio.create_task(onesearchResults(params)),
+            asyncio.create_task(braveResults(params)),
         ]
         # load independent widget sources
         widgetTasks = []
@@ -148,4 +150,4 @@ if __name__ == '__main__':
     else:
         print('This is running without UVLoop, expect slower performance')
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-        app.run()
+        app.run(debug=True)
