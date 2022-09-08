@@ -11,6 +11,8 @@ async def wordDefinition(params):
     query = params.get('q')
     link = f'https://www.merriam-webster.com/dictionary/{query}'
     soup = await linkRequester(link)
+    if soup is None:
+        return ''
     try:
         text = (soup.find('span', class_ = 'dtText').get_text()) #type: ignore
         if text.startswith(':'):

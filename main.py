@@ -113,7 +113,8 @@ async def query_post():
         if widgetCriteria:
             widgetTasks.append(asyncio.create_task(wordDefinition(params)))
         # collect results
-        interlacedResults = await interlace(await asyncio.gather(*resultsTasks))
+        results = [res for res in await asyncio.gather(*resultsTasks) if res is not None]
+        interlacedResults = await interlace(results)
         combinedSearchResults = asyncio.create_task(
             relevancyByOccurances(interlacedResults))  # type: ignore
         # load dependent widget sources

@@ -22,11 +22,22 @@ async def linkRequester(url):
         header = {'User-Agent': str(ua.random)}
         return header
     
+    async def request(url):
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, headers = await randomAgent()) as response:
+                return BeautifulSoup(await response.text(), "html.parser")
+        
     startTime = time()
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url, headers = await randomAgent()) as response:
-            print(f"Response from {parse.urlparse(url).hostname} in {round(time() - startTime, 5)}s")
-            return BeautifulSoup(await response.text(), "html.parser")
+    # timeout in 1.5 seconds
+    reqTask = asyncio.wait_for(request(url), timeout=1.5)
+    host = parse.urlparse(url).hostname
+    try:
+        req = await reqTask
+        print(f"Response from {host} in {round(time() - startTime, 5)}s")
+        return req
+    except Exception as e:
+        print(f'Time-out: No resp from {host}')
+        return None
 
 
 async def resultsToHTML(resultsDict):

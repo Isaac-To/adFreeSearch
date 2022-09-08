@@ -35,6 +35,8 @@ async def bingResults(params):
         bingParams['first'] = params.get("start") + 1
     del bingParams['start']
     soup = await linkRequester('https://bing.com/search?' + parse.urlencode(bingParams))
+    if soup is None:
+        return None
     # return soup.prettify()
     ress = soup.find_all("li", class_="b_algo") #type: ignore
     resultsTask = []

@@ -37,6 +37,8 @@ async def onesearchResults(params):
         onesearchParams['b'] = params.get("start") + 1
     del onesearchParams['start']
     soup = await linkRequester('https://www.onesearch.com/yhs/search?' + parse.urlencode(onesearchParams))
+    if soup is None:
+        return None
     # return soup.prettify()
     ress = soup.find_all("li") #type: ignore
     resultsTask = []

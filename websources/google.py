@@ -37,6 +37,8 @@ async def googleResults(params):
     if params.get('start') == 0:
         del googleParams['start']
     soup = await linkRequester('https://google.com/search?' + parse.urlencode(googleParams))
+    if soup is None:
+        return None
     # return soup.prettify()
     # fP1Qef is the class used to represent each result for google
     ress = soup.find_all("div", class_="fP1Qef") #type: ignore
