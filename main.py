@@ -150,4 +150,4 @@ if __name__ == '__main__':
     else:
         print('This is running without UVLoop, expect slower performance')
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-        app.run(debug=True)
+        app.run()
