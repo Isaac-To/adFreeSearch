@@ -104,18 +104,19 @@ input[type="radio"]:checked+label:before {
 .card-content {
     display: flex;
     width: 100%;
+    margin-bottom: 2%;
 }
 
 .card-text {
-    flex: 0 0 50%;
-    width: 50%;
+    flex: 0 0 46%;
 }
 
 .card-img {
-    flex: 1;
-    margin: 2%;
-    width: 50%;
-    object-fit: contain;
+    flex: 0 0 46%;
+    width: auto;
+    height: auto;
+    margin-right: 2%;
+    border-radius: 24px;
 }
 
 .result-box {
