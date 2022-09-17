@@ -34,10 +34,10 @@ async def wikipediaPage(link):
     except:
         imageUrl = None
     articleTitle = soup.find("h1").text # type: ignore
-    links = soup.findAll("a", href=True)
-    for link in links:
-        if link.get('href').startswith('#cite'):
-            link.decompose()
+    citations = soup.findAll("a", href=True)
+    for cite in citations:
+        if cite.get('href').startswith('#cite'):
+            cite.decompose()
     summarySnippet = soup.find_all("p") # type: ignore
     fullSummary = ""
     for summary in summarySnippet:
@@ -48,4 +48,5 @@ async def wikipediaPage(link):
             break
     if "may refer to:" in fullSummary and len(fullSummary) < 200:
         return ''
-    return render_template('wikipediaResults.html', title = articleTitle, imageUrl = imageUrl, summary = fullSummary, articleUrl = link)
+    hostname = parse.urlparse(link).hostname
+    return render_template('widgetCard.html', title = articleTitle, imageUrl = imageUrl, summary = fullSummary, articleUrl = link, source = hostname)
