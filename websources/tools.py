@@ -142,6 +142,7 @@ async def relevancyByOccurances(listOfResults):
                 for source in listOfResults[j - offset].get("source"):
                     if source not in listOfResults[i]['source']:
                         listOfResults[i]['source'].append(source)
+                        listOfResults[i]['source'] = sorted(listOfResults[i]['source'])
                 # removes the entry in the list
                 listOfResults.pop(j - offset)
                 offset += 1
