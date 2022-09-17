@@ -89,6 +89,12 @@ async def interlace(containsMultipleLists):
         j+=1
     return newList
 
+async def combineLists(conatinsMultipleLists):
+    combined = []
+    for i in conatinsMultipleLists:
+        combined.extend(i)
+    return combined
+
 
 async def relevancyByOccurances(listOfResults):
     """

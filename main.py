@@ -17,7 +17,7 @@ from websources.wikipedia import wikipediaInSearch
 # images
 from websources.image_deviantArt import deviantArtResults
 # tools
-from websources.tools import resultsToHTML, imgResultsToHTML, relevancyByOccurances, interlace
+from websources.tools import resultsToHTML, imgResultsToHTML, relevancyByOccurances, combineLists, interlace
 from generator import generateWidgetBar, generateFooter
 
 # app setup
@@ -115,17 +115,17 @@ async def query_post():
         if widgetCriteria:
             widgetTasks.append(asyncio.create_task(wordDefinition(params)))
         # collect results
-        results = [res for res in await asyncio.gather(*resultsTasks) if res is not None]
-        interlacedResults = await interlace(results)
-        combinedSearchResults = asyncio.create_task(
-            relevancyByOccurances(interlacedResults))  # type: ignore
+        results = await asyncio.gather(*resultsTasks)
+        combinedSearchResults = await interlace(results)
+        sortedSearchResultsTask = asyncio.create_task(
+            relevancyByOccurances(combinedSearchResults))  # type: ignore
         # load dependent widget sources
         # check if criteria to run widget is met
         if widgetCriteria:
             widgetTasks.append(asyncio.create_task(
-                wikipediaInSearch(interlacedResults)))
+                wikipediaInSearch(combinedSearchResults)))
         # sort results
-        combinedSearchResults = await combinedSearchResults
+        combinedSearchResults = await sortedSearchResultsTask
         # start assembling HTML for results
         resultsHTML = asyncio.create_task(resultsToHTML(combinedSearchResults))
         # layering
