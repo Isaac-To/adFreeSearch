@@ -18,7 +18,7 @@ async def buildResult(rawResult):
         result = {
             'title': rawResult.find("h3").text,
             'link': link,
-            'source': ['google.com'],
+            'source': ['google'],
             'summary': rawResult.find("div", class_="BNeawe s3v9rd AP7Wnd").text,
         }
         return result

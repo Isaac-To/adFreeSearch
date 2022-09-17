@@ -15,7 +15,7 @@ async def buildResults(rawResult):
         result = {
             'title': rawResult.find('h2').text,
             'link': link,
-            'source': ['bing.com'],
+            'source': ['bing'],
             'summary': rawResult.find("p").text,
         }
         return result

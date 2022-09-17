@@ -15,7 +15,7 @@ async def buildResults(rawResult):
         result = {
             'title': rawResult.find('span', class_ = "snippet-title").text,
             'link': link,
-            'source': ['brave.com'],
+            'source': ['brave'],
             'summary': rawResult.find("p").text,
         }
         return result
