@@ -114,11 +114,10 @@ input[type="radio"]:checked+label:before {
 .card-img {
     flex: 0 0 40%;
     width: auto;
-    height: 100%;
+    height: auto;
     margin: 2%;
-    margin-top: 6%;
     transform: translate(-2%, -2%);
-    border-radius: 24px;
+    object-fit: contain;
 }
 
 .result-box {
