@@ -24,7 +24,8 @@ A private, security oriented search engine
 
 ## 1.2. To-Dos
 
-- Dark Mode
+- Dark Mode (Currently compatible with browser wide dark modes)
+  - You can use an extension like Dark Reader or in Chrome, go to [Flags](chrome://flags) and enable force dark theme globally
 - Add more image sources
 - Add adjustable settings
 - Add video search
