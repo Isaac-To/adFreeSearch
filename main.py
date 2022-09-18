@@ -19,6 +19,7 @@ from websources.image_deviantArt import deviantArtResults
 # tools
 from websources.tools import resultsToHTML, imgResultsToHTML, relevancyByOccurances, combineLists, interlace
 from generator import generateWidgetBar, generateFooter
+from spellcheck import sentenceBreakDown
 
 # app setup
 app = Flask(__name__)
@@ -130,6 +131,9 @@ async def query_post():
         resultsHTML = asyncio.create_task(resultsToHTML(combinedSearchResults))
         # layering
         html += f'<br><h3 class="queryInfo">Showing results for <i>{params["q"]}</i></h3>'
+        corrected_query = sentenceBreakDown(params['q'])
+        if params['q'] != corrected_query:
+            html += f'<a href="search?q={corrected_query}">Did you mean: {corrected_query}?</a>'
         html += await generateWidgetBar(await asyncio.gather(*widgetTasks))
         html += await resultsHTML
     if session.get("mode") == "images":
