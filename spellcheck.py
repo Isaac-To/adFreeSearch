@@ -23,7 +23,5 @@ def sentenceBreakDown(sentence):
         else:
             return word 
     individualWords = sentence.split(" ")
-    recreatedSentence = ""
-    for word in individualWords:
-        recreatedSentence += check(word)
-    return recreatedSentence
+    correctedWords = [check(word) for word in individualWords]
+    return ' '.join(correctedWords)

@@ -133,7 +133,7 @@ async def query_post():
         html += f'<br><h3 class="queryInfo">Showing results for <i>{params["q"]}</i></h3>'
         corrected_query = sentenceBreakDown(params['q'])
         if params['q'] != corrected_query:
-            html += f'<a href="search?q={corrected_query}">Did you mean: {corrected_query}?</a>'
+            html += render_template('didYouMean.html', corrected_query = corrected_query)
         html += await generateWidgetBar(await asyncio.gather(*widgetTasks))
         html += await resultsHTML
     if session.get("mode") == "images":
