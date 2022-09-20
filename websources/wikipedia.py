@@ -42,12 +42,12 @@ async def wikipediaPage(link):
     summarySnippet = soup.find_all("p") # type: ignore
     fullSummary = ""
     for summary in summarySnippet:
-        # gets the first 500 or so characters
-        if len(fullSummary) < 500:
+        # gets the first 250 or so characters
+        if len(fullSummary) < 250:
             fullSummary += summary.text
         else:
             break
-    if "may refer to:" in fullSummary and len(fullSummary) < 200:
+    if "may refer to:" in fullSummary and len(fullSummary) < 100:
         return ''
     hostname = parse.urlparse(link).hostname
     return render_template('widgetCard.html', title = articleTitle, imageUrl = imageUrl, summary = fullSummary, articleUrl = link, source = hostname)
