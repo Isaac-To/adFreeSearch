@@ -116,9 +116,9 @@ input[type="radio"]:checked+label:before {
     object-fit: contain;
 }
 
-@media only screen and (min-width: 900px) {
+@media only screen and (min-width: 1200px) {
     .card {
-        width: 50%;
+        width: 75%;
     }
     .card-content {
         display: flex;
