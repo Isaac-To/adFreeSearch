@@ -28,11 +28,11 @@ async def wikipediaPage(link):
     if soup == None:
         return ""
     try:
-        infobox = soup.find('td', class_="infobox-image")
+        infobox = soup.find('table', class_="infobox")
         img = infobox.find('img', src=True) # type: ignore
         imageUrl = img.get('src')  # type: ignore
     except:
-        imageUrl = None
+        imageUrl = soup.find('img', src=True).get('src') # type: ignore
     articleTitle = soup.find("h1").text # type: ignore
     citations = soup.findAll("a", href=True)
     for cite in citations:
