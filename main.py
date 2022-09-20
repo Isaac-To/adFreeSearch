@@ -111,10 +111,7 @@ async def query_post():
         ]
         # load independent widget sources
         widgetTasks = []
-        widgetCriteria = len(str(params.get('q')).split(' ')) < 3 and params.get('start') == 0
-        # check if criteria to run widget is met
-        if widgetCriteria:
-            widgetTasks.append(asyncio.create_task(wordDefinition(params)))
+        widgetTasks.append(asyncio.create_task(wordDefinition(params)))
         # collect results
         results = await asyncio.gather(*resultsTasks)
         combinedSearchResults = await interlace(results)
@@ -122,9 +119,8 @@ async def query_post():
             relevancyByOccurances(combinedSearchResults))  # type: ignore
         # load dependent widget sources
         # check if criteria to run widget is met
-        if widgetCriteria:
-            widgetTasks.append(asyncio.create_task(
-                wikipediaInSearch(combinedSearchResults)))
+        widgetTasks.append(asyncio.create_task(
+        wikipediaInSearch(combinedSearchResults)))
         # sort results
         combinedSearchResults = await sortedSearchResultsTask
         # start assembling HTML for results
