@@ -104,7 +104,6 @@ async def query_post():
             session['mode'] = 'search'
     except:
         session['mode'] = 'search'
-    print(session)
     # start generating footer buttons
     footer = asyncio.create_task(generateFooter(params['start']))
     html = ''
