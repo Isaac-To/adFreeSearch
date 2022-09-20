@@ -11,21 +11,20 @@ A private, security oriented search engine
 ## 1.1. Features
 
 - [x] Self Hostable, you can build this on docker with the provided Docker files or just run it through the main.py file.
-- [x] Google link based tracker stripping
-- [x] Ranking of results based on multiple sources
-- ~~[x] A proxy (masks the client's IP as the server is making the request, stripping then forwarding it on) &larr; needs more work but exists in an alpha state. Currently strips script elements if it is detected to reference external JS files. Common web building frameworks will need to be added in the future.~~ **(insecure)**
+- [x] Supports the aggregation of results from multiple sources.
+- [x] Strips the link based tracking of results that are derived from search engines.  
+- [x] Ranking of results based on multiple sources and how often the source occurs. The more times that the result appears across different sources, the higher it will be ranked on the output.
 - [x] Minimalist design, free of ads or any images (speeds up render times)
 - [x] No JS
 - [x] Doesn't store IPs, queries (except when it may print on the console (usually an accident of mine for forgetting to remove or comment out print statements used in testing))
-- [x] All interactions are made through POST requests
+- [x] All interactions are made through POST requests where possible
 - [x] A widget sidebar (shows up based on the queries featuring information from a variety of sources)
 - [x] Image search (only deviantart right now)
-- [x] Derives results from multiple search engines and ranks them
 
 ## 1.2. To-Dos
 
 - Dark Mode (Currently compatible with browser wide dark modes)
-  - You can use an extension like Dark Reader or in Chrome, go to [Flags](chrome://flags) and enable force dark theme globally
+  - You can use an extension like Dark Reader or in a Chromium based browser, go to [Chrome Flags](chrome://flags/#enable-force-dark), [Edge Flags](edge://flags/#enable-force-dark), and enable force dark theme globally
 - Add more image sources
 - Add adjustable settings
 - Add video search
