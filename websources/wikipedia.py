@@ -27,12 +27,13 @@ async def wikipediaPage(link):
     soup = await linkRequester(link)
     if soup == None:
         return ""
-    try:
-        infobox = soup.find('table', class_="infobox")
-        img = infobox.find('img', src=True) # type: ignore
-        imageUrl = img.get('src')  # type: ignore
-    except:
-        imageUrl = soup.find('img', src=True).get('src') # type: ignore
+    imgs = soup.find_all('img', src=True)
+    for img in imgs:
+        if img.get('src').startswith('//upload.wikimedia.org/wikipedia/commons/thumb/'):
+            imageUrl = img.get("src")
+            break
+    else:
+        imageUrl = None
     articleTitle = soup.find("h1").text # type: ignore
     citations = soup.findAll("a", href=True)
     for cite in citations:
