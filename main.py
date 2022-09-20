@@ -78,6 +78,10 @@ async def query_post():
         session['mode'] = request.form.get("mode")
         session['start'] = 0
         session['q'] = request.form.get('query')
+    elif request.form.get('correctQueryButton') != None:
+        session['mode'] = request.form.get("mode")
+        session['start'] = 0
+        session['q'] = request.form.get('correctQueryButton')
     elif request.form.get('pg-btn') != None:
         # page change button backend
         session['start'] = int(request.form.get('pg-btn'))  # type: ignore
@@ -95,6 +99,12 @@ async def query_post():
         params['start'] = session["start"]
     except:
         params["start"] = 0
+    try:
+        if session['mode'] == None:
+            session['mode'] = 'search'
+    except:
+        session['mode'] = 'search'
+    print(session)
     # start generating footer buttons
     footer = asyncio.create_task(generateFooter(params['start']))
     html = ''
