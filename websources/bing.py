@@ -19,7 +19,7 @@ async def buildResults(rawResult):
             'summary': rawResult.find("p").text,
         }
         return result
-    except:
+    except AttributeError:
         return None
 
 async def bingResults(params):
@@ -37,7 +37,6 @@ async def bingResults(params):
     soup = await linkRequester('https://bing.com/search?' + parse.urlencode(bingParams))
     if soup is None:
         return None
-    # return soup.prettify()
     ress = soup.find_all("li", class_="b_algo") #type: ignore
     resultsTask = []
     for r in ress:

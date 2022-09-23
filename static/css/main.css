@@ -21,7 +21,7 @@ small {
     font-size: small;
 }
 
-.brand-name {
+.brandName {
     width: 100%;
     margin-top: 15%;
     transform: translateY(-50%);
@@ -63,7 +63,7 @@ input[type="radio"]:checked+label:before {
     content: "Images";
 }
 
-.input-text {
+.inputText {
     background-color: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(2px) saturate(150%);
     box-shadow: 0px 0px 2px lightgray;
@@ -77,7 +77,7 @@ input[type="radio"]:checked+label:before {
     outline: none;
 }
 
-.input-text:focus {
+.inputText:focus {
     box-shadow: 0px 0px 8px lightgray;
 }
 
@@ -101,12 +101,12 @@ input[type="radio"]:checked+label:before {
     padding: 2%;
 }
 
-.card-content {
+.cardContent {
     width: 100%;
     margin-bottom: 2%;
 }
 
-.card-img {
+.cardImg {
     width: auto;
     height: auto;
     margin: 2%;
@@ -120,26 +120,26 @@ input[type="radio"]:checked+label:before {
     .card {
         width: 75%;
     }
-    .card-content {
+    .cardContent {
         display: flex;
     }
-    .card-text {
+    .cardText {
         flex: 0 0 46%;
     }
-    .card-img {
+    .cardImg {
         flex: 0 0 40%;
     }
 }
 
-.result-box {
+.resultBox {
     margin-bottom: 2%;
 }
 
-.btn-container {
+.btnContainer {
     display: inline;
 }
 
-.btn-row {
+.btnRow {
     margin-top: 1%;
     text-align: center;
 }
@@ -159,7 +159,7 @@ input[type="radio"]:checked+label:before {
     background-color: rgba(0, 0, 0, 0.2);
 }
 
-.result-box {
+.resultBox {
     margin-top: 2%;
 }
 
@@ -172,13 +172,13 @@ input[type="radio"]:checked+label:before {
     margin-bottom: 5%;
 }
 
-.img-content {
+.imgContent {
     height: 100%;
     width: 100%;
     object-fit: cover;
 }
 
-.img-item {
+.imgItem {
     display: inline-block;
     width: 25%;
     height: 25%;

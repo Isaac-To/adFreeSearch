@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 from .tools import linkRequester, linkFormatter
 from urllib import parse
 import asyncio
@@ -19,7 +20,7 @@ async def buildResults(rawResult):
             'summary': rawResult.find("p").text,
         }
         return result
-    except Exception as e:
+    except AttributeError:
         return None
 
 async def braveResults(params):
@@ -37,7 +38,6 @@ async def braveResults(params):
     soup = await linkRequester('https://search.brave.com/search?' + parse.urlencode(braveParams))
     if soup is None:
         return None
-    # return soup.prettify()
     ress = soup.find_all("div", class_="snippet fdb") #type: ignore
     resultsTask = []
     for r in ress:

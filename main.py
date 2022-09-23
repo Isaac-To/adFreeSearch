@@ -28,7 +28,6 @@ app.secret_key = uuid.uuid1().hex
 # no limit on caches for templates
 app.jinja_env.cache = {}
 
-
 @app.route('/')
 async def index():
     """
@@ -36,7 +35,7 @@ async def index():
     renders the index.html template
     :return: The return value of the function is a string.
     """
-    return f'<h1 class="brand-name">{parse.urlparse(request.url).hostname}</h1>' + render_template("index.html", mode='search')
+    return f'<h1 class="brandName">{parse.urlparse(request.url).hostname}</h1>' + render_template("index.html", mode='search')
 
 
 @app.route('/s')
@@ -52,12 +51,12 @@ async def search():
     urlparams = parse.parse_qs(parse.urlparse(request.url).query)
     try:
         session['q'] = urlparams.get('q')[0]  # type: ignore
-    except Exception as e:
+    except IndexError:
         # if there is no query
         return redirect('/')
     try:
         session['start'] = urlparams.get('start')[0]  # type: ignore
-    except:
+    except IndexError:
         # by default, it should start at 0 unless denoted in the url
         session['start'] = 0
     return await query_post()
@@ -82,9 +81,9 @@ async def query_post():
         session['mode'] = request.form.get("mode")
         session['start'] = 0
         session['q'] = request.form.get('correctQueryButton')
-    elif request.form.get('pg-btn') != None:
+    elif request.form.get('pgBtn') != None:
         # page change button backend
-        session['start'] = int(request.form.get('pg-btn'))  # type: ignore
+        session['start'] = int(request.form.get('pgBtn'))  # type: ignore
     params = dict()
     # incase errors
     try:
@@ -93,16 +92,16 @@ async def query_post():
             return redirect("/")
         # assigns the session query to the param to be subitted
         params['q'] = session['q']
-    except:
+    except KeyError:
         return (redirect('/'))
     try:
         params['start'] = session["start"]
-    except:
+    except KeyError:
         params["start"] = 0
     try:
         if session['mode'] == None:
             session['mode'] = 'search'
-    except:
+    except KeyError:
         session['mode'] = 'search'
     # start generating footer buttons
     footer = asyncio.create_task(generateFooter(params['start']))

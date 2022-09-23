@@ -17,5 +17,5 @@ async def wordDefinition(params):
         text = (soup.find('span', class_ = 'dtText').get_text()) #type: ignore
         if text.startswith(':'):
             return render_template('definition.html', title=query.title(), text=text[1:], source = link)
-    except: pass
+    except AttributeError: pass
     return ''

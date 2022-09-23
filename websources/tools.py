@@ -35,7 +35,7 @@ async def linkRequester(url):
         req = await reqTask
         print(f"Response from {host} in {round(time() - startTime, 5)}s")
         return req
-    except Exception as e:
+    except TimeoutError:
         print(f'Time-out: No resp from {host}')
         return None
 

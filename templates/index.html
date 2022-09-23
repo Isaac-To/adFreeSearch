@@ -3,9 +3,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 </head>
 <div class="header">
-    <form method="POST" class="btn-container">    
-        <input type="text" name="query" class="input-text" placeholder="Make a private search">
-        <div class="btn-row">
+    <form method="POST" class="btnContainer">    
+        <input type="text" name="query" class="inputText" placeholder="Make a private search">
+        <div class="btnRow">
             {% if mode == 'search' %}
                 <span class="radio">
                     <input type="radio", id="searchMark" name="mode" value="search" checked="checked">

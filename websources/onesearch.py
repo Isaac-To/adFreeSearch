@@ -21,7 +21,7 @@ async def buildResults(rawResult):
             'summary': rawResult.find("p", class_="fz-ms").text,
         }
         return result
-    except:
+    except AttributeError:
         return None
 
 async def onesearchResults(params):
@@ -39,7 +39,6 @@ async def onesearchResults(params):
     soup = await linkRequester('https://www.onesearch.com/yhs/search?' + parse.urlencode(onesearchParams))
     if soup is None:
         return None
-    # return soup.prettify()
     ress = soup.find_all("li") #type: ignore
     resultsTask = []
     for r in ress:

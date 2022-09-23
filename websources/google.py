@@ -22,7 +22,7 @@ async def buildResult(rawResult):
             'summary': rawResult.find("div", class_="BNeawe s3v9rd AP7Wnd").text,
         }
         return result
-    except:
+    except AttributeError:
         return None
 
 async def googleResults(params):
