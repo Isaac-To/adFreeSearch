@@ -10,12 +10,12 @@ from time import time
 # search
 from websources.google import googleResults
 from websources.bing import bingResults
-from websources.onesearch import onesearchResults
+from websources.oneSearch import onesearchResults
 from websources.brave import braveResults
-from websources.merriamwebster import wordDefinition
+from websources.merriamWebster import wordDefinition
 from websources.wikipedia import wikipediaInSearch
 # images
-from websources.image_deviantArt import deviantArtResults
+from websources.imageDeviantArt import deviantArtResults
 # tools
 from websources.tools import resultsToHTML, imgResultsToHTML, relevancyByOccurances, combineLists, interlace
 from generator import generateWidgetBar, generateFooter
