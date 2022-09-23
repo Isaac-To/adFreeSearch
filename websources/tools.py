@@ -35,9 +35,9 @@ async def linkRequester(url):
         req = await reqTask
         print(f"Response from {host} in {round(time() - startTime, 5)}s")
         return req
-    except TimeoutError:
+    except (asyncio.CancelledError, asyncio.exceptions.TimeoutError):
         print(f'Time-out: No resp from {host}')
-        return None
+        return ''
 
 
 async def resultsToHTML(resultsDict):
