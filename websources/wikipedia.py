@@ -12,7 +12,9 @@ async def wikipediaInSearch(results):
     for res in results:
         hostname = str(parse.urlparse(res.get('link')).hostname)
         if hostname and hostname.endswith('.wikipedia.org'):
-            return await wikipediaPage(res.get('link'))
+            page = await wikipediaPage(res.get('link'))
+            if page != "":
+                return page
     return ''
 
 async def wikipediaPage(link):
@@ -29,7 +31,7 @@ async def wikipediaPage(link):
         return ""
     imgs = soup.find_all('img', src=True)
     for img in imgs:
-        if img.get('src').startswith('//upload.wikimedia.org/wikipedia/commons/thumb/'):
+        if img.get('src').startswith('//upload.wikimedia.org/wikipedia/commons/thumb/') and not 'svg' in img.get('src'):
             imageUrl = img.get("src")
             break
     else:
@@ -47,7 +49,7 @@ async def wikipediaPage(link):
             fullSummary += summary.text
         else:
             break
-    if "may refer to:" in fullSummary and len(fullSummary) < 100:
+    if "refers to" in fullSummary:
         return ''
     hostname = parse.urlparse(link).hostname
     return render_template('widgetCard.html', title = articleTitle, imageUrl = imageUrl, summary = fullSummary, articleUrl = link, source = hostname)
