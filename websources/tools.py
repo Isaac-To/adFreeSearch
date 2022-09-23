@@ -37,7 +37,7 @@ async def linkRequester(url):
         return req
     except (asyncio.CancelledError, asyncio.exceptions.TimeoutError):
         print(f'Time-out: No resp from {host}')
-        return ''
+        return BeautifulSoup("<TimeoutError>", "html.parser") # random filler just to prevent errors
 
 
 async def resultsToHTML(resultsDict):
