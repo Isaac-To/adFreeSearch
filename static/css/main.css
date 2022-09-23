@@ -107,6 +107,7 @@ input[type="radio"]:checked+label:before {
 }
 
 .cardImg {
+    z-index: -1;
     width: auto;
     height: auto;
     margin: 2%;
