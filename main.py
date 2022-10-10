@@ -28,6 +28,7 @@ app.secret_key = uuid.uuid1().hex
 # no limit on caches for templates
 app.jinja_env.cache = {}
 
+
 @app.route('/')
 async def index():
     """
@@ -128,7 +129,7 @@ async def query_post():
         # load dependent widget sources
         # check if criteria to run widget is met
         widgetTasks.append(asyncio.create_task(
-        wikipediaInSearch(combinedSearchResults)))
+            wikipediaInSearch(combinedSearchResults)))
         # sort results
         combinedSearchResults = await sortedSearchResultsTask
         # start assembling HTML for results
@@ -137,7 +138,8 @@ async def query_post():
         html += f'<br><h3 class="queryInfo">Showing results for <i>{params["q"]}</i></h3>'
         corrected_query = sentenceBreakDown(params['q'])
         if params['q'] != corrected_query:
-            html += render_template('didYouMean.html', corrected_query = corrected_query)
+            html += render_template('didYouMean.html',
+                                    corrected_query=corrected_query)
         html += await generateWidgetBar(await asyncio.gather(*widgetTasks))
         html += await resultsHTML
     if session.get("mode") == "images":

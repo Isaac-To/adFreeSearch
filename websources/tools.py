@@ -6,10 +6,11 @@ import aiohttp
 from time import time
 import asyncio
 
+
 async def linkRequester(url):
     """
     It takes a URL, makes a request to that URL, and returns the HTML of the page
-    
+
     :param url: The URL to be scraped
     :return: A BeautifulSoup object
     """
@@ -21,12 +22,12 @@ async def linkRequester(url):
         ua = UserAgent()
         header = {'User-Agent': str(ua.random)}
         return header
-    
+
     async def request(url):
         async with aiohttp.ClientSession() as session:
-            async with session.get(url, headers = await randomAgent()) as response:
+            async with session.get(url, headers=await randomAgent()) as response:
                 return BeautifulSoup(await response.text(), "html.parser")
-        
+
     startTime = time()
     # timeout in 3 seconds
     reqTask = asyncio.wait_for(request(url), timeout=3)
@@ -37,13 +38,14 @@ async def linkRequester(url):
         return req
     except (asyncio.CancelledError, asyncio.exceptions.TimeoutError):
         print(f'Time-out: No resp from {host}')
-        return BeautifulSoup("<TimeoutError>", "html.parser") # random filler just to prevent errors
+        # random filler just to prevent errors
+        return BeautifulSoup("<TimeoutError>", "html.parser")
 
 
 async def resultsToHTML(resultsDict):
     """
     It takes a dictionary of results and returns a string of HTML
-    
+
     :param resultsDict: A dictionary of results from the search engine
     :return: The resultsDict is being returned as a string of HTML.
     """
@@ -54,23 +56,26 @@ async def resultsToHTML(resultsDict):
         outputHTML += buildHTML
     return outputHTML
 
+
 async def imgResultsToHTML(resultsDict):
     """
     It takes a dictionary of image results and returns a string of HTML
-    
+
     :param resultsDict: A dictionary of results. Each result is a dictionary with the following keys:
     :return: A string of HTML code.
     """
     outputHTML = ""
     for r in resultsDict:
-        outputHTML += render_template('imageResults.html', link = r['link'], source = r["source"])
+        outputHTML += render_template('imageResults.html',
+                                      link=r['link'], source=r["source"])
     return outputHTML
+
 
 async def interlace(containsMultipleLists):
     """
     It takes a list of lists and returns a list of the first elements of each list, then the second
     elements of each list, and so on
-    
+
     :param containsMultipleLists: A list of lists
     :return: A list of all the elements in the list of lists, but in a different order.
     """
@@ -86,8 +91,9 @@ async def interlace(containsMultipleLists):
             break
         if len(containsMultipleLists[j]) > 0:
             newList.append(containsMultipleLists[j].pop(0))
-        j+=1
+        j += 1
     return newList
+
 
 async def combineLists(conatinsMultipleLists):
     combined = []
@@ -100,7 +106,7 @@ async def relevancyByOccurances(listOfResults):
     """
     It takes a list of results, and returns a list of results, but with the results sorted by how many
     sources they came from
-    
+
     :param listOfResults: A list of dictionaries, each dictionary containing the following keys:
     :return: A list of dictionaries.
     """
@@ -109,7 +115,7 @@ async def relevancyByOccurances(listOfResults):
         """
         It takes two lists of dictionaries, and returns a list of dictionaries that is sorted by the length
         of the 'source' key
-        
+
         :param a: The first list to be merged
         :param b: The list of dictionaries to be sorted
         :return: a list of dictionaries.
@@ -130,7 +136,7 @@ async def relevancyByOccurances(listOfResults):
         """
         It takes a list of numbers, splits it in half, sorts each half, and then merges the two sorted
         halves
-        
+
         :param c: The list to be sorted
         :return: The result of the merge function.
         """
@@ -138,7 +144,8 @@ async def relevancyByOccurances(listOfResults):
             aTask = asyncio.create_task(msort(c[:int(len(c) / 2)]))
             bTask = asyncio.create_task(msort(c[int(len(c) / 2):]))
             return await merge(await aTask, await bTask)
-        else: return c
+        else:
+            return c
 
     for i in range(len(listOfResults)):
         offset = 0
@@ -148,12 +155,14 @@ async def relevancyByOccurances(listOfResults):
                 for source in listOfResults[j - offset].get("source"):
                     if source not in listOfResults[i]['source']:
                         listOfResults[i]['source'].append(source)
-                        listOfResults[i]['source'] = sorted(listOfResults[i]['source'])
+                        listOfResults[i]['source'] = sorted(
+                            listOfResults[i]['source'])
                 # removes the entry in the list
                 listOfResults.pop(j - offset)
                 offset += 1
     return await msort(listOfResults)
-    
+
+
 async def linkFormatter(link):
     if not link.startswith('http'):
         link = 'https://' + link
