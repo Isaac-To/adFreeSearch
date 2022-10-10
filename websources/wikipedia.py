@@ -49,7 +49,7 @@ async def wikipediaPage(link):
             fullSummary += summary.text
         else:
             break
-    if "refers to" in fullSummary or "refer to" in fullSummary:
+    if "refers to" in fullSummary:
         return ''
     hostname = parse.urlparse(link).hostname
     return render_template('widgetCard.html', title = articleTitle, imageUrl = imageUrl, summary = fullSummary, articleUrl = link, source = hostname)
