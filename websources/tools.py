@@ -126,10 +126,10 @@ async def relevancyByOccurances(listOfResults):
                 c.append(a.pop(0))
             else:
                 c.append(b.pop(0))
-        while len(a) != 0:
-            c.append(a.pop(0))
-        while len(b) != 0:
-            c.append(b.pop(0))
+        if len(a) != 0:
+            c.extend(a)
+        elif len(b) != 0:
+            c.extend(b)
         return c
 
     async def msort(c):
