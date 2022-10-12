@@ -1,18 +1,20 @@
 from spellchecker import SpellChecker
+import asyncio
 
-def sentenceBreakDown(sentence):
+
+async def sentenceBreakDown(sentence):
     """
-    It takes a sentence as input and returns a boolean value indicating whether the sentence
+    It takes a sentence as input and returns a boolean
+    value indicating whether the sentence
     is spelled correctly or not
-    
     :param word: The word to check
     :return: A boolean value.
     """
-    def check(word):
+    async def check(word):
         """
-        It takes a word as input and returns a boolean value indicating whether the word is spelled
+        It takes a word as input and returns a boolean value
+        indicating whether the word is spelled
         correctly or not
-        
         :param word: The word to check
         :return: A boolean value.
         """
@@ -21,7 +23,9 @@ def sentenceBreakDown(sentence):
         if corrected:
             return corrected
         else:
-            return word 
+            return word
     individualWords = sentence.split(" ")
-    correctedWords = [check(word) for word in individualWords]
-    return ' '.join(correctedWords)
+    correctedWords = [asyncio.create_task(check(word))
+                      for word in individualWords
+                      ]
+    return ' '.join(await asyncio.gather(*correctedWords))
