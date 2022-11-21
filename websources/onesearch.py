@@ -3,11 +3,12 @@ from .tools import linkRequester, linkFormatter
 from urllib import parse
 import asyncio
 
+
 async def buildResults(rawResult):
     """
     It takes a raw result from the search engine, and returns a dictionary with the title, link, source,
     and summary of the result
-    
+
     :param rawResult: The raw result from the search engine
     :return: A dictionary with the title, link, source, and summary of the search result.
     """
@@ -24,11 +25,12 @@ async def buildResults(rawResult):
     except AttributeError:
         return None
 
+
 async def onesearchResults(params):
     """
     It takes a dictionary of parameters, and returns a list of dictionaries, each of which represents a
     search result from Onesearch
-    
+
     :param params: a dictionary of parameters to be passed to the search engine
     :return: A list of dictionaries.
     """
@@ -39,8 +41,9 @@ async def onesearchResults(params):
     soup = await linkRequester('https://www.onesearch.com/yhs/search?' + parse.urlencode(onesearchParams))
     if soup is None:
         return None
-    ress = soup.find_all("li") #type: ignore
+    ress = soup.find_all("li")  # type: ignore
     resultsTask = []
     for r in ress:
-        resultsTask.append(asyncio.create_task(buildResults(r))) # type: ignore
+        resultsTask.append(asyncio.create_task(
+            buildResults(r)))  # type: ignore
     return [i for i in await asyncio.gather(*resultsTask) if i is not None]
